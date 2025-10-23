@@ -78,6 +78,22 @@ def logout_view(request):
     return redirect('home')
 
 
+def login_redirect(request):
+    """Redirect to login page with proper messaging"""
+    messages.info(request, 'Please log in to access this page.')
+    return redirect('login')
+
+
+def custom_404(request, exception):
+    """Custom 404 error page"""
+    return render(request, 'myApp/404.html', status=404)
+
+
+def custom_500(request):
+    """Custom 500 error page"""
+    return render(request, 'myApp/500.html', status=500)
+
+
 def home(request):
     """Home page with Speakopoly city map"""
     if request.user.is_authenticated:

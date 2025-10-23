@@ -666,3 +666,73 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 Watching for file changes with StatReloader
 "GET /leaderboard/ HTTP/1.1" 200 15388
 "GET / HTTP/1.1" 200 20627
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 17782
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 13387
+"GET /login/ HTTP/1.1" 200 12770
+"POST /login/ HTTP/1.1" 200 12996
+"GET / HTTP/1.1" 200 13387
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /lesson/1/ HTTP/1.1" 302 0
+Not Found: /accounts/login/
+"GET /accounts/login/?next=/lesson/1/ HTTP/1.1" 404 6922
+"GET /lesson/1/ HTTP/1.1" 302 0
+Not Found: /accounts/login/
+"GET /accounts/login/?next=/lesson/1/ HTTP/1.1" 404 6922
+"GET /leaderboard/ HTTP/1.1" 302 0
+Not Found: /accounts/login/
+"GET /accounts/login/?next=/leaderboard/ HTTP/1.1" 404 6925
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\urls.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12770
+"GET /profile/ HTTP/1.1" 302 0
+"GET /login/?next=/profile/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 13175
+"GET / HTTP/1.1" 200 13387
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12770
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"GET /streak/ HTTP/1.1" 302 0
+"GET /login/?next=/streak/ HTTP/1.1" 200 12770
+"GET / HTTP/1.1" 200 13387
+"GET /streak/ HTTP/1.1" 302 0
+"GET /login/?next=/streak/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"GET /lesson/1/ HTTP/1.1" 302 0
+"GET /login/?next=/lesson/1/ HTTP/1.1" 200 12770
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12770
+"POST /login/?next=/leaderboard/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 17782
+"GET / HTTP/1.1" 200 17782
+"GET /levels/ HTTP/1.1" 200 14636
+"GET /lesson/1/ HTTP/1.1" 200 27428
+"GET /quests/ HTTP/1.1" 200 17943
+"GET /lesson/1/ HTTP/1.1" 200 27428
+"GET /quests/ HTTP/1.1" 200 17943
+"GET /quests/ HTTP/1.1" 200 17943
+"GET / HTTP/1.1" 200 22651
+"GET / HTTP/1.1" 200 22651
+"GET /levels/ HTTP/1.1" 200 14636
+"GET /quests/ HTTP/1.1" 200 17943
+"GET /leaderboard/ HTTP/1.1" 200 12543
+"GET / HTTP/1.1" 200 22651
