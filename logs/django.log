@@ -663,3 +663,6 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /lesson/1/ HTTP/1.1" 200 30273
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7005
+Watching for file changes with StatReloader
+"GET /leaderboard/ HTTP/1.1" 200 15388
+"GET / HTTP/1.1" 200 20627
