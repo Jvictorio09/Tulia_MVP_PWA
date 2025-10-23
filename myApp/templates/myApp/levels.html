@@ -1,0 +1,75 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}All Levels - Speakopoly{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Learning Journey</h1>
+            <p class="text-xl text-gray-600">Master high-stakes communication through 6 progressive levels</p>
+        </div>
+
+        <!-- Levels Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for level in levels %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden {% if level.number <= user.profile.current_level %}border-2 border-green-200{% elif level.number == user.profile.current_level|add:1 %}border-2 border-yellow-200{% else %}border border-gray-200{% endif %}">
+                <!-- Level Header -->
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold">Level {{ level.number }}</h3>
+                            <p class="text-purple-100">{{ level.name }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold">{{ level.number }}</div>
+                            <div class="text-sm text-purple-100">Level</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level Content -->
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">{{ level.description }}</p>
+                    
+                    <!-- District Info -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">🏛️ {{ level.district_name }}</h4>
+                        <p class="text-sm text-gray-600">{{ level.district_description }}</p>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-gray-900">{{ level.duration_minutes }}</div>
+                            <div class="text-xs text-gray-500">Minutes</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-gray-900">{{ level.xp_required }}</div>
+                            <div class="text-xs text-gray-500">XP Required</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    {% if level.number <= user.profile.current_level %}
+                        <a href="{% url 'lesson_runner' level.units.first.lessons.first.id %}" 
+                           class="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors text-center block">
+                            Continue Learning
+                        </a>
+                    {% elif level.number == user.profile.current_level|add:1 %}
+                        <button class="w-full bg-yellow-500 text-gray-900 py-3 px-4 rounded-lg font-semibold cursor-not-allowed">
+                            Unlock Soon
+                        </button>
+                    {% else %}
+                        <button class="w-full bg-gray-300 text-gray-500 py-3 px-4 rounded-lg font-semibold cursor-not-allowed">
+                            Locked
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

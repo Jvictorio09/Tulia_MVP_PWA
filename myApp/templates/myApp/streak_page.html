@@ -1,0 +1,63 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Streak & Progress - Speakopoly{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Your Learning Streak</h1>
+            <p class="text-gray-600">Keep your momentum going with daily practice</p>
+        </div>
+
+        <!-- Streak Stats -->
+        <div class="bg-white rounded-lg shadow-sm border p-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-orange-500 mb-2">{{ streak.current_streak }}</div>
+                    <div class="text-gray-600">Current Streak</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-blue-500 mb-2">{{ streak.longest_streak }}</div>
+                    <div class="text-gray-600">Longest Streak</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-500 mb-2">{{ user.profile.total_xp }}</div>
+                    <div class="text-gray-600">Total XP</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow-sm border p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
+            {% if recent_attempts %}
+                <div class="space-y-4">
+                    {% for attempt in recent_attempts %}
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm">✓</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-gray-900">{{ attempt.exercise.lesson.name }}</div>
+                                <div class="text-sm text-gray-500">{{ attempt.exercise.get_exercise_type_display }}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">+{{ attempt.xp_earned }} XP</div>
+                            <div class="text-sm text-gray-500">{{ attempt.created_at|date:"M d" }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8 text-gray-500">
+                    <p>No recent activity. Start learning to build your streak!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
