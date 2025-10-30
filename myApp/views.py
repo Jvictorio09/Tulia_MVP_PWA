@@ -10,8 +10,10 @@ from django.utils import timezone
 from django.db.models import Q, F, Count, Sum
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
 import json
 import logging
+import os
 
 from .models import (
     Profile, Level, Unit, Lesson, Exercise, ExerciseAttempt,
@@ -271,6 +273,16 @@ def calculate_exercise_score(exercise, user_response):
         # For audio exercises, return a placeholder score
         # In production, this would use speech-to-text and comparison
         return 0.8  # Placeholder
+    
+    elif exercise.exercise_type == 'scenario':
+        # For scenario exercises, same as select
+        correct_answers = exercise.correct_answers
+        if set(user_response) == set(correct_answers):
+            return 1.0
+        elif any(answer in correct_answers for answer in user_response):
+            return 0.5  # Partial credit
+        else:
+            return 0.0
     
     return 0.0
 
@@ -600,3 +612,130 @@ def unlock_next_level(user):
                 reward=reward,
                 quantity=reward_data.get('quantity', 1)
             )
+
+
+@login_required
+@require_http_methods(["POST"])
+def complete_lesson(request, lesson_id):
+    """Complete a lesson and unlock next level if applicable"""
+    from django.http import JsonResponse
+    import json
+    
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    user = request.user
+    
+    # Add lesson XP and coins
+    profile = user.profile
+    profile.total_xp += lesson.xp_reward
+    profile.coins += lesson.xp_reward // 2
+    profile.save()
+    
+    # Check if we should unlock the next level
+    current_level = lesson.unit.level
+    next_level = None
+    next_level_unlocked = False
+    
+    # Always unlock the next level when completing a lesson (progressive unlocking)
+    next_level_obj = Level.objects.filter(number=current_level.number + 1).first()
+    
+    if next_level_obj and profile.current_level < next_level_obj.number:
+        # Unlock the next level if not already unlocked
+        profile.current_level = next_level_obj.number
+        profile.save()
+        next_level = next_level_obj.number
+        next_level_unlocked = True
+        
+        # Give rewards for leveling up
+        unlock_next_level(user)
+    
+    return JsonResponse({
+        'success': True,
+        'next_level_unlocked': next_level_unlocked,
+        'next_level': next_level,
+        'xp_earned': lesson.xp_reward,
+    })
+
+
+@login_required
+def ai_chat(request):
+    """AI Chat assistant page for lesson help"""
+    try:
+        profile = request.user.profile
+        current_level = profile.current_level
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
+        current_level = 1
+    
+    # Get user's current lesson context
+    context = {
+        'profile': profile,
+        'current_level': current_level,
+    }
+    
+    return render(request, 'myApp/ai_chat.html', context)
+
+
+@login_required
+@require_http_methods(["POST"])
+def send_ai_message(request):
+    """Send message to OpenAI API and get response"""
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message', '')
+        
+        if not user_message:
+            return JsonResponse({'error': 'Message is required'}, status=400)
+        
+        # Get OpenAI API key from environment
+        from django.conf import settings
+        api_key = settings.OPENAI_API_KEY if hasattr(settings, 'OPENAI_API_KEY') else os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            return JsonResponse({'error': 'OpenAI API key not configured. Add OPENAI_API_KEY to your .env file.'}, status=500)
+        
+        # Import OpenAI
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=api_key)
+        except ImportError:
+            return JsonResponse({'error': 'OpenAI library not installed. Run: pip install openai'}, status=500)
+        
+        # Get user context
+        profile = request.user.profile
+        current_level = profile.current_level
+        
+        # Build context-aware prompt
+        system_prompt = f"""You are Arwin, a friendly AI tutor for Tulia (Speakopoly), a communication skills learning app. 
+        
+Current user level: {current_level}
+User's total XP: {profile.total_xp}
+User's current streak: {profile.current_streak} days
+
+Help students with:
+- Questions about high-stakes communication, clarity, storytelling, delivery, and influence
+- Explaining concepts from their current lessons
+- Providing hints and guidance for exercises
+- Encouragement and motivation
+
+Keep responses concise, friendly, and practical. Use emojis sparingly. If asked about something outside the curriculum, politely redirect to communication skills."""
+        
+        # Call OpenAI API
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message}
+            ],
+            temperature=0.7,
+            max_tokens=300,
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        return JsonResponse({
+            'success': True,
+            'response': ai_response,
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in send_ai_message: {e}")
+        return JsonResponse({'error': str(e)}, status=500)

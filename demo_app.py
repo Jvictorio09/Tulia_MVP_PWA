@@ -122,6 +122,11 @@ def demo_user_journey():
         }
     )
     
+    # Set password for demo user
+    if created:
+        demo_user.set_password('demo123')
+        demo_user.save()
+    
     if created:
         print("✅ Created demo user")
     else:

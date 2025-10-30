@@ -22,4 +22,11 @@ urlpatterns = [
     path('quests/', views.quests, name='quests'),
     path('quests/<int:quest_id>/start/', views.start_quest, name='start_quest'),
     path('quests/<int:quest_id>/complete/', views.complete_quest, name='complete_quest'),
+    
+    # Lesson completion
+    path('lesson/<int:lesson_id>/complete/', views.complete_lesson, name='complete_lesson'),
+    
+    # AI Chat
+    path('ai-chat/', views.ai_chat, name='ai_chat'),
+    path('ai-chat/send/', views.send_ai_message, name='send_ai_message'),
 ]

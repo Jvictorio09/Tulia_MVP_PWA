@@ -736,3 +736,553 @@ Watching for file changes with StatReloader
 "GET /quests/ HTTP/1.1" 200 17943
 "GET /leaderboard/ HTTP/1.1" 200 12543
 "GET / HTTP/1.1" 200 22651
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 22651
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15689
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /signup/ HTTP/1.1" 200 14443
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /login/ HTTP/1.1" 200 12770
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 22651
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 27428
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET / HTTP/1.1" 200 22651
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /quests/ HTTP/1.1" 200 17943
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /leaderboard/ HTTP/1.1" 200 12543
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /profile/ HTTP/1.1" 200 15713
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /levels/ HTTP/1.1" 200 14636
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET / HTTP/1.1" 200 22651
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 27428
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 15689
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7165
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12770
+"GET /profile/ HTTP/1.1" 302 0
+"GET /login/?next=/profile/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 13175
+"GET /login/ HTTP/1.1" 200 12770
+"POST /login/ HTTP/1.1" 200 12996
+Watching for file changes with StatReloader
+"POST /login/ HTTP/1.1" 200 12996
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 21376
+"GET /lesson/1/ HTTP/1.1" 200 27432
+"GET /lesson/1/ HTTP/1.1" 200 30153
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 329
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /exercise/2/submit/ HTTP/1.1" 200 196
+"GET / HTTP/1.1" 200 21376
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 30153
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /quests/ HTTP/1.1" 200 18175
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /quests/1/start/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 18635
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /quests/1/complete/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 17948
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /levels/ HTTP/1.1" 200 14641
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 30154
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET / HTTP/1.1" 200 22656
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /streak/ HTTP/1.1" 200 15120
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /levels/ HTTP/1.1" 200 14641
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET / HTTP/1.1" 200 22656
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 15689
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /login/ HTTP/1.1" 200 13205
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /login/ HTTP/1.1" 200 12996
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+Watching for file changes with StatReloader
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 23823
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /levels/ HTTP/1.1" 200 25944
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 31820
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /levels/ HTTP/1.1" 200 26378
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /lesson/1/ HTTP/1.1" 200 32254
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 32196
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 21555
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 32465
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"GET /lesson/1/ HTTP/1.1" 200 32466
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 32466
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 27441
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"GET /lesson/1/ HTTP/1.1" 200 27447
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 27452
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 27452
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 27898
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"GET /lesson/1/ HTTP/1.1" 200 29398
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /lesson/1/ HTTP/1.1" 200 29407
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 29407
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30449
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30449
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30493
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30493
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+Watching for file changes with StatReloader
+"GET /lesson/1/ HTTP/1.1" 200 30493
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30385
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30385
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+Watching for file changes with StatReloader
+"GET /lesson/1/ HTTP/1.1" 200 30385
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"GET /lesson/1/ HTTP/1.1" 200 30449
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET / HTTP/1.1" 200 24261
+"GET /levels/ HTTP/1.1" 200 26380
+"GET / HTTP/1.1" 200 24261
+"GET /lesson/1/ HTTP/1.1" 200 30449
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /levels/ HTTP/1.1" 200 26380
+"GET /levels/ HTTP/1.1" 200 26380
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15689
+"GET /login/ HTTP/1.1" 200 12770
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 24261
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24261
+"GET /lesson/1/ HTTP/1.1" 200 30449
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/1/submit/ HTTP/1.1" 200 215
+"POST /exercise/2/submit/ HTTP/1.1" 200 243
+"GET /lesson/1/ HTTP/1.1" 200 30449
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+Watching for file changes with StatReloader
+Not Found: /lesson/1/
+"GET /lesson/1/ HTTP/1.1" 404 4456
+Not Found: /lesson/1/
+"GET /lesson/1/ HTTP/1.1" 404 4456
+"GET / HTTP/1.1" 200 24262
+"GET /levels/ HTTP/1.1" 200 26381
+"GET /lesson/17/ HTTP/1.1" 200 28010
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"GET /lesson/17/ HTTP/1.1" 200 28331
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"POST /exercise/40/submit/ HTTP/1.1" 200 246
+"POST /exercise/40/submit/ HTTP/1.1" 200 225
+"GET /lesson/17/ HTTP/1.1" 200 29219
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"POST /exercise/40/submit/ HTTP/1.1" 200 225
+"POST /exercise/41/submit/ HTTP/1.1" 200 212
+"GET /lesson/17/ HTTP/1.1" 200 31096
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"POST /exercise/40/submit/ HTTP/1.1" 200 225
+"POST /exercise/41/submit/ HTTP/1.1" 200 212
+"GET / HTTP/1.1" 200 24264
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /lesson/17/ HTTP/1.1" 200 31096
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"POST /exercise/40/submit/ HTTP/1.1" 200 225
+"POST /exercise/41/submit/ HTTP/1.1" 200 212
+"POST /exercise/42/submit/ HTTP/1.1" 200 148
+"POST /exercise/42/submit/ HTTP/1.1" 200 148
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /lesson/17/ HTTP/1.1" 200 31096
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/39/submit/ HTTP/1.1" 200 258
+"POST /exercise/40/submit/ HTTP/1.1" 200 225
+"POST /exercise/41/submit/ HTTP/1.1" 200 212
+"POST /exercise/42/submit/ HTTP/1.1" 200 148
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 24264
+"GET / HTTP/1.1" 200 24264
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /lesson/33/ HTTP/1.1" 200 28650
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /lesson/33/ HTTP/1.1" 200 29502
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"GET /lesson/33/ HTTP/1.1" 200 30485
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15689
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7276
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7165
+"GET /levels/ HTTP/1.1" 200 24468
+"GET /lesson/1/ HTTP/1.1" 302 0
+"GET /login/?next=/lesson/1/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 24468
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12770
+"GET /profile/ HTTP/1.1" 302 0
+"GET /login/?next=/profile/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 24468
+"GET / HTTP/1.1" 200 15689
+"GET /signup/ HTTP/1.1" 200 14443
+"GET /login/ HTTP/1.1" 200 12770
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 24264
+"GET /levels/ HTTP/1.1" 200 26382
+"GET / HTTP/1.1" 200 24264
+"GET /lesson/33/ HTTP/1.1" 200 30485
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+"GET / HTTP/1.1" 200 24264
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /lesson/33/ HTTP/1.1" 200 30485
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /quests/ HTTP/1.1" 200 12816
+Not Found: /lesson/1/
+"GET /lesson/1/ HTTP/1.1" 404 4456
+"GET /quests/ HTTP/1.1" 200 12816
+E:\New Downloads\Tulia\myProject\myApp\urls.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /quests/ HTTP/1.1" 200 12816
+E:\New Downloads\Tulia\myProject\myApp\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /quests/ HTTP/1.1" 200 12816
+"GET /levels/ HTTP/1.1" 200 26382
+"GET /lesson/33/ HTTP/1.1" 200 31431
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+"POST /lesson/33/complete/ HTTP/1.1" 200 80
+"GET / HTTP/1.1" 200 27156
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15689
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7571
+"GET /lesson/1/ HTTP/1.1" 302 0
+"GET /login/?next=/lesson/1/ HTTP/1.1" 200 12770
+"GET /levels/ HTTP/1.1" 200 24468
+"GET / HTTP/1.1" 200 15689
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 15689
+"GET /lesson/1/ HTTP/1.1" 302 0
+"GET /login/?next=/lesson/1/ HTTP/1.1" 200 12770
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12770
+"POST /login/?next=/quests/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 27156
+"GET /quests/ HTTP/1.1" 200 30711
+"GET /quests/ HTTP/1.1" 200 30711
+Not Found: /lesson/1/
+"GET /lesson/1/ HTTP/1.1" 404 4456
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 7571
+Not Found: /lesson/1/
+"GET /lesson/1/ HTTP/1.1" 404 4456
+"GET /quests/ HTTP/1.1" 200 30711
+"GET /quests/ HTTP/1.1" 200 30711
+"GET /levels/ HTTP/1.1" 200 26468
+"GET /levels/ HTTP/1.1" 200 26521
+E:\New Downloads\Tulia\myProject\myApp\urls.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /levels/ HTTP/1.1" 200 26504
+Internal Server Error: /ai-chat/
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\New Downloads\Tulia\myProject\myApp\views.py", line 676, in ai_chat
+    return render(request, 'myApp/ai_chat.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: myApp/ai_chat.html
+"GET /ai-chat/ HTTP/1.1" 500 93315
+"GET /quests/ HTTP/1.1" 200 30747
+"POST /quests/1/start/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 28355
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 8098
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /quests/ HTTP/1.1" 200 28355
+"GET /ai-chat/ HTTP/1.1" 200 18671
+"GET /ai-chat/ HTTP/1.1" 200 17670
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 8098
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /ai-chat/ HTTP/1.1" 200 18325
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 8098
+Internal Server Error: /ai-chat/send/
+"POST /ai-chat/send/ HTTP/1.1" 500 42
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /ai-chat/ HTTP/1.1" 200 18325
+"POST /ai-chat/send/ HTTP/1.1" 200 111
+"GET / HTTP/1.1" 200 28475
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15725
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7987
+"GET /signup/ HTTP/1.1" 200 14706
+"POST /signup/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 23854
+"GET /levels/ HTTP/1.1" 200 25975
+"GET / HTTP/1.1" 200 23854
+"GET /ai-chat/ HTTP/1.1" 200 17879
+"POST /ai-chat/send/ HTTP/1.1" 200 114
+"GET /quests/ HTTP/1.1" 200 30303
+"POST /quests/1/start/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 27911
+"GET /leaderboard/ HTTP/1.1" 200 12577
+"GET /profile/ HTTP/1.1" 200 15750
+"GET /levels/ HTTP/1.1" 200 25975
+"GET /lesson/33/ HTTP/1.1" 200 31348
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 248
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+"GET / HTTP/1.1" 200 25573
+"GET /levels/ HTTP/1.1" 200 26410
+"GET /lesson/33/ HTTP/1.1" 200 31467
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+"POST /lesson/33/complete/ HTTP/1.1" 200 84
+"GET / HTTP/1.1" 200 25575
+"GET /levels/ HTTP/1.1" 200 26411
+"GET /quests/ HTTP/1.1" 200 28347
+E:\New Downloads\Tulia\myProject\myProject\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /ai-chat/ HTTP/1.1" 200 18316
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 15725
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7987
+"GET /login/ HTTP/1.1" 200 13033
+"GET /signup/ HTTP/1.1" 200 14479
+"GET /login/ HTTP/1.1" 200 12806
+"GET /levels/ HTTP/1.1" 200 24504
+"GET /quests/ HTTP/1.1" 302 0
+"GET /login/?next=/quests/ HTTP/1.1" 200 12806
+"GET /leaderboard/ HTTP/1.1" 302 0
+"GET /login/?next=/leaderboard/ HTTP/1.1" 200 12806
+"GET /profile/ HTTP/1.1" 302 0
+"GET /login/?next=/profile/ HTTP/1.1" 200 12806
+"GET /ai-chat/ HTTP/1.1" 302 0
+"GET /login/?next=/ai-chat/ HTTP/1.1" 200 12806
+"GET / HTTP/1.1" 200 15725
+"GET /signup/ HTTP/1.1" 200 14479
+"GET /login/ HTTP/1.1" 200 12806
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 25575
+"GET /levels/ HTTP/1.1" 200 26411
+"GET /ai-chat/ HTTP/1.1" 200 18316
+"POST /ai-chat/send/ HTTP/1.1" 200 150
+"GET /quests/ HTTP/1.1" 200 28347
+"GET /leaderboard/ HTTP/1.1" 200 13013
+"GET /profile/ HTTP/1.1" 200 21005
+"GET /levels/ HTTP/1.1" 200 26411
+"GET /lesson/33/ HTTP/1.1" 200 31467
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 225
+"POST /exercise/78/submit/ HTTP/1.1" 200 130
+"GET / HTTP/1.1" 200 25575
+"GET /levels/ HTTP/1.1" 200 26411
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7987
+"GET / HTTP/1.1" 200 25575

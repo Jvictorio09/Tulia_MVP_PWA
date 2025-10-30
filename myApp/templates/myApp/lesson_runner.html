@@ -1,335 +1,518 @@
-{% extends 'myApp/base.html' %}
+{# templates/speakopoly/lesson_detail_singleflow.html #}
+{% extends 'myApp/base_lesson.html' %}
+{% load static %}
 
-{% block title %}{{ lesson.name }} - Speakopoly{% endblock %}
+{% block title %}{{ lesson.name }} – Speakopoly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50">
-    <!-- Lesson Header -->
-    <div class="bg-white shadow-sm border-b">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ lesson.name }}</h1>
-                    <p class="text-gray-600">{{ lesson.unit.name }} • {{ lesson.duration_minutes }} min</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="text-center">
-                        <div class="text-lg font-bold text-purple-600">{{ lesson.xp_reward }}</div>
-                        <div class="text-xs text-gray-500">XP</div>
-                    </div>
-                    <button class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+<div class="min-h-screen bg-gradient-to-b from-[#0B0E14] via-[#0B0E14] to-[#111623] text-white">
+  <!-- Top App Bar -->
+  <header class="fixed inset-x-0 top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/5 bg-white/5 border-b border-white/10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between mt-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-cyan-400 grid place-items-center shadow-lg shadow-cyan-500/20">
+          <span class="text-lg font-black">S</span>
         </div>
-    </div>
-    
-    <!-- Progress Bar -->
-    <div class="bg-gray-200 h-1">
-        <div class="bg-purple-600 h-1 transition-all duration-300" style="width: 0%"></div>
-    </div>
-    
-    <!-- Lesson Content -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Tip Sheet -->
-        {% if lesson.tip_sheet %}
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <div class="flex items-start space-x-3">
-                <div class="flex-shrink-0">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-blue-900 mb-2">Pro Tip</h3>
-                    <p class="text-blue-800">{{ lesson.tip_sheet }}</p>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-lg font-semibold leading-4">{{ lesson.name }}</h1>
+          <p class="text-xs text-white/60">{{ lesson.unit.name }} • {{ lesson.duration_minutes }} min</p>
         </div>
-        {% endif %}
-        
-        <!-- Exercises -->
-        <div id="exercise-container">
-            {% for exercise in exercises %}
-            <div class="exercise-card bg-white rounded-lg shadow-sm border p-6 mb-6 {% if exercise.id in completed_exercises %}border-green-200 bg-green-50{% endif %}" 
-                 data-exercise-id="{{ exercise.id }}">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">
-                        Exercise {{ forloop.counter }}: {{ exercise.get_exercise_type_display }}
-                    </h3>
-                    {% if exercise.id in completed_exercises %}
-                    <span class="text-green-600 font-semibold">✓ Completed</span>
-                    {% endif %}
-                </div>
-                
-                <div class="mb-4">
-                    <p class="text-gray-700">{{ exercise.prompt }}</p>
-                </div>
-                
-                <!-- Exercise Content based on type -->
-                {% if exercise.exercise_type == 'select' %}
-                    <div class="space-y-3">
-                        {% for option in exercise.options %}
-                        <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                            <input type="checkbox" name="exercise_{{ exercise.id }}" value="{{ forloop.counter0 }}" class="rounded">
-                            <span>{{ option }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                
-                {% elif exercise.exercise_type == 'match' %}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h4 class="font-semibold mb-2">Items</h4>
-                            <div class="space-y-2" id="items_{{ exercise.id }}">
-                                {% for option in exercise.options %}
-                                <div class="p-3 border rounded-lg bg-gray-50 cursor-move" data-value="{{ forloop.counter0 }}">
-                                    {{ option }}
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold mb-2">Targets</h4>
-                            <div class="space-y-2" id="targets_{{ exercise.id }}">
-                                {% for option in exercise.options %}
-                                <div class="p-3 border-2 border-dashed border-gray-300 rounded-lg min-h-[50px] drop-zone">
-                                    Drop here
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                
-                {% elif exercise.exercise_type == 'rewrite' %}
-                    <div class="space-y-4">
-                        <div class="bg-gray-100 p-4 rounded-lg">
-                            <h4 class="font-semibold mb-2">Original Text:</h4>
-                            <p class="text-gray-700">{{ exercise.stimulus_text }}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Your Rewrite:</label>
-                            <textarea name="exercise_{{ exercise.id }}" 
-                                    class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                    rows="4" 
-                                    placeholder="Rewrite the text for better clarity..."></textarea>
-                        </div>
-                    </div>
-                
-                {% elif exercise.exercise_type == 'listen' %}
-                    <div class="text-center space-y-4">
-                        <button class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
-                            🎵 Play Audio
-                        </button>
-                        <div class="space-y-2">
-                            {% for option in exercise.options %}
-                            <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="exercise_{{ exercise.id }}" value="{{ forloop.counter0 }}" class="rounded">
-                                <span>{{ option }}</span>
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                
-                {% elif exercise.exercise_type == 'speak' %}
-                    <div class="text-center space-y-4">
-                        <div class="bg-gray-100 p-6 rounded-lg">
-                            <h4 class="font-semibold mb-2">Speak this phrase:</h4>
-                            <p class="text-lg text-gray-700">{{ exercise.stimulus_text }}</p>
-                        </div>
-                        <button class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors record-button" 
-                                data-exercise-id="{{ exercise.id }}">
-                            🎤 Start Recording
-                        </button>
-                        <div class="recording-status hidden">
-                            <div class="flex items-center justify-center space-x-2">
-                                <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                                <span class="text-red-600 font-semibold">Recording...</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                
-                <!-- Exercise Actions -->
-                <div class="flex items-center justify-between mt-6">
-                    <div class="text-sm text-gray-500">
-                        Attempts: <span class="font-semibold">{{ exercise.max_attempts }}</span>
-                    </div>
-                    <div class="space-x-3">
-                        <button class="text-gray-500 hover:text-gray-700 text-sm">Show Hint</button>
-                        <button class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors submit-exercise"
-                                data-exercise-id="{{ exercise.id }}">
-                            Check Answer
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Lesson Actions -->
-        <div class="flex items-center justify-between mt-8 pt-6 border-t">
-            <a href="{% url 'home' %}" class="text-gray-500 hover:text-gray-700">
-                ← Back to City
-            </a>
-            <button class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
-                Complete Lesson
-            </button>
-        </div>
-    </div>
-</div>
+      </div>
 
-<!-- Audio Recording Modal -->
-<div id="recording-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full">
-            <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Recording Audio</h3>
-                <p class="text-gray-600 mb-6">Speak clearly into your microphone</p>
-                
-                <div class="flex items-center justify-center space-x-4">
-                    <button id="stop-recording" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors">
-                        Stop Recording
-                    </button>
-                    <button id="cancel-recording" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors">
-                        Cancel
-                    </button>
-                </div>
-            </div>
+      <div class="flex items-center gap-5">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2M3 12H1m22 0h-2M5.64 5.64l-1.41-1.41M19.78 19.78l-1.41-1.41M18.36 5.64l1.41-1.41M4.22 19.78l1.41-1.41"/></svg>
+          <span class="text-sm"><span id="streak">{{ request.session.streak|default:1 }}</span>‑day</span>
         </div>
+        <div class="flex items-center gap-1" aria-label="Lives">
+          {% for _ in "xxxxx" %}
+          <svg class="w-5 h-5 {% if forloop.counter0 < request.session.lives|default:3 %}text-rose-400{% else %}text-white/20{% endif %}" viewBox="0 0 24 24" fill="currentColor"><path d="M12.1 21.35l-1.1-1.0C5.14 15.24 2 12.36 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.22 2.44C11.59 5.01 13.26 4 15 4 17.5 4 19.5 6 19.5 8.5c0 3.86-3.14 6.74-8.9 11.85z"/></svg>
+          {% endfor %}
+        </div>
+        <div class="px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-300/20 text-emerald-300 text-sm font-semibold">
+          +{{ lesson.xp_reward }} XP
+        </div>
+      </div>
     </div>
+    <div class="h-1 bg-white/10">
+      <div id="progressBar" class="h-1 w-0 bg-gradient-to-r from-fuchsia-500 via-violet-500 to-cyan-400 transition-[width] duration-500"></div>
+    </div>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between text-xs text-white/70">
+      <span id="stepCounter">Task 1 of {{ exercises|length }}</span>
+      <span id="resultToast" class="hidden px-2 py-1 rounded-lg border border-white/10 bg-white/5">Nice!</span>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-28">
+    {% if lesson.tip_sheet %}
+    <section class="mb-6">
+      <button id="tipToggle" class="w-full text-left">
+        <div class="group p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/7.5 transition flex items-start gap-3">
+          <div class="mt-0.5 w-9 h-9 rounded-xl bg-blue-500/15 grid place-items-center">
+            <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold">Pro Tip</h3>
+            <p id="tipBody" class="text-white/80 mt-1 line-clamp-2 group-aria-expanded:line-clamp-none">{{ lesson.tip_sheet }}</p>
+          </div>
+          <svg id="tipChevron" class="w-5 h-5 text-white/60 mt-1 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+        </div>
+      </button>
+    </section>
+
+    <!-- Floating CTA (appears after answering) -->
+    <div id="ctaBar" class="hidden fixed inset-x-0 bottom-20 z-40">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur shadow-[0_20px_40px_-10px_rgba(0,0,0,.4)] p-3 flex items-center justify-between">
+          <div class="text-sm text-white/80"><span id="ctaText">Nice! Ready for the next task?</span></div>
+          <button id="ctaButton" class="px-5 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Next</button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <aside class="mb-6 p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-cyan-400/10">
+      <div class="flex items-center gap-3">
+        <img src="{% static 'img/speakopoly_mascot.png' %}" alt="Mascot" class="w-12 h-12 rounded-xl ring-1 ring-white/10">
+        <p class="text-white/80"><span class="font-semibold">Coach Jeannie:</span> Answer right to jump to the next task — no scrollathons.</p>
+      </div>
+    </aside>
+
+    <section id="exercise-container" class="space-y-6">
+      {% for exercise in exercises %}
+      <article
+        class="exercise-card rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_6px_30px_-12px_rgba(139,92,246,.35)]"
+        data-exercise-id="{{ exercise.id }}"
+        data-type="{{ exercise.exercise_type }}"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold tracking-tight">Task {{ forloop.counter }} • {{ exercise.get_exercise_type_display }}</h3>
+          <div class="text-xs text-white/60">Attempts <span class="font-semibold">{{ exercise.max_attempts }}</span></div>
+        </div>
+
+        {% if exercise.stimulus_text %}
+        <div class="mb-4 p-4 rounded-xl bg-white/5 border border-white/10 text-white/90">{{ exercise.stimulus_text }}</div>
+        {% endif %}
+
+        {% if exercise.exercise_type == 'fourpics' %}
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            {% for url in exercise.image_urls %}
+            <button type="button" class="pic h-28 rounded-xl overflow-hidden ring-1 ring-white/10 focus:outline-none focus:ring-2">
+              <img src="{{ url }}" alt="clue {{ forloop.counter }}" class="w-full h-full object-cover" loading="lazy">
+            </button>
+            {% endfor %}
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" inputmode="latin" autocomplete="off" placeholder="Type the word…"
+                   class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-fuchsia-500/60"/>
+            <button class="submit-exercise px-5 py-3 rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button>
+          </div>
+        {% elif exercise.exercise_type == 'select' %}
+          <div class="grid sm:grid-cols-2 gap-3">
+            {% for option in exercise.options %}
+            <label class="choice group flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/7.5 cursor-pointer">
+              <input type="checkbox" class="peer sr-only" value="{{ forloop.counter0 }}"/>
+              <div class="w-10 h-10 rounded-lg grid place-items-center bg-white/5 ring-1 ring-white/10"><span class="text-xl">{{ exercise.icon_set|default:"🔹" }}</span></div>
+              <span class="flex-1 text-white/90">{{ option }}</span>
+              <span class="hidden peer-checked:inline text-emerald-300 text-sm font-semibold">picked</span>
+            </label>
+            {% endfor %}
+          </div>
+          <div class="mt-4 text-right"><button class="submit-exercise px-5 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button></div>
+        {% elif exercise.exercise_type == 'match' %}
+          <div class="grid md:grid-cols-2 gap-4">
+            <div id="items_{{ exercise.id }}" class="space-y-2">
+              <h4 class="text-sm font-semibold text-white/80 mb-2">Variables</h4>
+              {% for option in exercise.options %}
+              <div draggable="true" data-value="{{ forloop.counter0 }}" class="drag p-3 rounded-xl bg-white/5 border border-white/10 cursor-grab hover:bg-white/10 transition">{{ option }}</div>
+              {% endfor %}
+            </div>
+            <div id="targets_{{ exercise.id }}" class="space-y-2">
+              <h4 class="text-sm font-semibold text-white/80 mb-2">Descriptions</h4>
+              {% for answer in exercise.correct_answers %}
+              <div class="drop p-3 rounded-xl border-2 border-dashed border-white/15 min-h-[48px] grid place-items-center text-white/60 hover:border-violet-400/50 transition" data-target="{{ forloop.counter0 }}">{{ answer }}</div>
+              {% empty %}
+              <div class="text-white/60 text-sm">No descriptions available</div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mt-4 text-right"><button class="submit-exercise px-5 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button></div>
+        {% elif exercise.exercise_type == 'rewrite' %}
+          <div class="space-y-3">
+            {% if exercise.prompt %}
+            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+              <h4 class="font-semibold text-white/90 mb-2">Original text:</h4>
+              <p class="text-white/70">{{ exercise.prompt }}</p>
+            </div>
+            {% endif %}
+            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 focus:ring-violet-500/60" placeholder="Rewrite for clarity, tone, and brevity…"></textarea>
+            <div class="flex items-center justify-between text-xs text-white/60">
+              <div>Clarity meter: <span id="meter_{{ exercise.id }}" class="font-semibold text-white/80">—</span></div>
+              <button class="submit-exercise px-4 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button>
+            </div>
+          </div>
+        {% elif exercise.exercise_type == 'listen' %}
+          <div class="text-center space-y-4">
+            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-white/80 mb-3">{{ exercise.prompt }}</p>
+              {% if exercise.stimulus_audio %}
+              <audio id="audio_{{ exercise.id }}" src="{{ exercise.stimulus_audio }}"></audio>
+              <button onclick="document.getElementById('audio_{{ exercise.id }}').play()" class="play px-6 py-3 rounded-xl bg-white/10 border border-white/10 hover:bg-white/15 font-semibold">▶ Play Audio</button>
+              {% else %}
+              <button id="tts_{{ exercise.id }}" class="play px-6 py-3 rounded-xl bg-white/10 border border-white/10 hover:bg-white/15 font-semibold">🎤 Read Aloud</button>
+              {% endif %}
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              {% for option in exercise.options %}
+              <label class="choice group flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/7.5 cursor-pointer">
+                <input type="radio" class="peer sr-only" name="exercise_{{ exercise.id }}" value="{{ forloop.counter0 }}"/>
+                <div class="w-10 h-10 rounded-lg grid place-items-center bg-white/5 ring-1 ring-white/10">🎧</div>
+                <span class="flex-1 text-white/90">{{ option }}</span>
+                <span class="hidden peer-checked:inline text-emerald-300 text-sm font-semibold">picked</span>
+              </label>
+              {% endfor %}
+            </div>
+            <button class="submit-exercise px-5 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button>
+          </div>
+        {% elif exercise.exercise_type == 'speak' %}
+          <div class="text-center space-y-4">
+            <div class="p-5 rounded-xl bg-white/5 border border-white/10">
+              <h4 class="font-semibold mb-1">Say this:</h4>
+              <p class="text-lg">{{ exercise.stimulus_text }}</p>
+            </div>
+            <button class="record px-6 py-3 rounded-xl bg-rose-500 font-semibold">🎤 Start</button>
+            <div class="rec-status hidden text-rose-300 font-semibold">Recording…</div>
+            <button class="submit-exercise px-5 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button>
+          </div>
+        {% elif exercise.exercise_type == 'scenario' %}
+          <div class="space-y-4">
+            {% if exercise.prompt %}
+            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-white/90">{{ exercise.prompt }}</p>
+            </div>
+            {% endif %}
+            <div class="space-y-3">
+              {% for option in exercise.options %}
+              <label class="choice group flex items-start gap-3 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/7.5 cursor-pointer transition">
+                <input type="radio" class="peer sr-only mt-1" name="exercise_{{ exercise.id }}" value="{{ forloop.counter0 }}"/>
+                <div class="w-5 h-5 rounded-full border-2 border-white/40 peer-checked:border-violet-400 peer-checked:bg-violet-400 grid place-items-center mt-0.5">
+                  <div class="w-2 h-2 rounded-full bg-white hidden peer-checked:block"></div>
+                </div>
+                <span class="flex-1 text-white/90">{{ option }}</span>
+              </label>
+              {% endfor %}
+            </div>
+            <div class="text-right">
+              <button class="submit-exercise px-5 py-2 rounded-lg bg-gradient-to-r from-fuchsia-500 to-cyan-400 font-semibold">Check</button>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="feedback mt-4 hidden"></div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <footer id="lessonFooter" class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between hidden">
+      <a href="{% url 'home' %}" class="text-white/70 hover:text-white">← Back to City</a>
+      <button id="completeLesson" class="px-6 py-3 rounded-xl bg-emerald-500 font-semibold">Complete Lesson</button>
+    </footer>
+  </main>
+
+  <canvas id="confetti" class="fixed inset-0 pointer-events-none hidden"></canvas>
 </div>
 
 <script>
-// Exercise submission with HTMX
-document.addEventListener('DOMContentLoaded', function() {
-    const submitButtons = document.querySelectorAll('.submit-exercise');
-    
-    submitButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const exerciseId = this.dataset.exerciseId;
-            const exerciseCard = this.closest('.exercise-card');
-            
-            // Collect user response based on exercise type
-            let response = [];
-            const inputs = exerciseCard.querySelectorAll('input:checked, textarea, input[type="text"]');
-            
-            inputs.forEach(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    response.push(parseInt(input.value));
-                } else {
-                    response.push(input.value);
-                }
-            });
-            
-            // Submit via HTMX
-            fetch(`/exercise/${exerciseId}/submit/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify({
-                    response: response,
-                    duration: 0 // TODO: Track actual duration
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (data.is_correct) {
-                        exerciseCard.classList.add('border-green-200', 'bg-green-50');
-                        this.textContent = '✓ Correct!';
-                        this.classList.add('bg-green-600');
-                    } else {
-                        this.textContent = 'Try Again';
-                        this.classList.add('bg-red-600');
-                    }
-                    
-                    // Show feedback
-                    if (data.feedback) {
-                        const feedbackDiv = document.createElement('div');
-                        feedbackDiv.className = 'mt-4 p-3 rounded-lg ' + (data.is_correct ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
-                        feedbackDiv.textContent = data.feedback;
-                        exerciseCard.appendChild(feedbackDiv);
-                    }
-                }
-            });
+(function(){
+  const $ = (sel, ctx=document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+  // Tip sheet toggle
+  const tipToggle = $('#tipToggle');
+  if (tipToggle) {
+    tipToggle.addEventListener('click', () => {
+      const body = $('#tipBody');
+      const chev = $('#tipChevron');
+      body.classList.toggle('line-clamp-2');
+      chev.classList.toggle('rotate-180');
+    });
+  }
+
+  // Single-task flow
+  const cards = $$('.exercise-card');
+  const progressBar = $('#progressBar');
+  const stepCounter = $('#stepCounter');
+  const resultToast = $('#resultToast');
+  let current = 0; const total = cards.length;
+
+  function showCard(i){
+    cards.forEach((c, idx) => {
+      if(idx === i){
+        c.classList.remove('hidden');
+        c.style.opacity = 0; c.style.transform = 'translateY(8px)';
+        requestAnimationFrame(()=>{
+          c.style.transition = 'opacity 220ms ease, transform 220ms ease';
+          c.style.opacity = 1; c.style.transform = 'translateY(0)';
         });
+      } else { c.classList.add('hidden'); }
     });
+    const pct = total ? Math.round((i/total)*100) : 0;
+    progressBar.style.width = pct + '%';
+    if(stepCounter) stepCounter.textContent = `Task ${Math.min(i+1,total)} of ${total}`;
+  }
+
+  cards.forEach((c, i)=>{ if(i>0) c.classList.add('hidden'); });
+  showCard(current);
+
+  // Reveal footer when last task is shown
+  const footer = $('#lessonFooter');
+  if (footer && cards.length) {
+    const lastCard = cards[cards.length - 1];
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) footer.classList.remove('hidden');
+        else footer.classList.add('hidden');
+      });
+    }, { threshold: 0.3 });
+    io.observe(lastCard);
+  }
+
+  function getCSRF(){ const m = document.cookie.match(/csrftoken=([^;]+)/); return m?m[1]:''; }
+
+  function boom(){
+    const c = $('#confetti');
+    const ctx = c.getContext('2d');
+    const W = c.width = innerWidth, H = c.height = innerHeight;
+    c.classList.remove('hidden');
     
-    // Audio recording functionality
-    const recordButtons = document.querySelectorAll('.record-button');
-    const recordingModal = document.getElementById('recording-modal');
-    const stopRecordingBtn = document.getElementById('stop-recording');
-    const cancelRecordingBtn = document.getElementById('cancel-recording');
+    // Vibrant colors palette
+    const colors = ['#8B5CF6', '#EC4899', '#F472B6', '#06B6D4', '#10B981', '#FBBF24', '#F59E0B', '#EF4444', '#6366F1', '#3B82F6'];
+    const shapes = ['rect', 'circle'];
     
-    let mediaRecorder;
-    let audioChunks = [];
+    // Create 200 pieces with varied properties
+    const pieces = new Array(200).fill(0).map(()=>({ 
+      x: Math.random()*W, 
+      y: -20, 
+      size: 6+Math.random()*10, 
+      vx: -3+Math.random()*6, 
+      vy: 2+Math.random()*4, 
+      a: Math.random()*Math.PI*2,
+      rotSpeed: 0.05+Math.random()*0.1,
+      shape: shapes[Math.floor(Math.random()*shapes.length)],
+      color: colors[Math.floor(Math.random()*colors.length)],
+      gravity: 0.1+Math.random()*0.15
+    }));
     
-    recordButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const exerciseId = this.dataset.exerciseId;
-            startRecording(exerciseId);
-        });
-    });
-    
-    stopRecordingBtn.addEventListener('click', function() {
-        stopRecording();
-    });
-    
-    cancelRecordingBtn.addEventListener('click', function() {
-        cancelRecording();
-    });
-    
-    function startRecording(exerciseId) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                
-                mediaRecorder.ondataavailable = event => {
-                    audioChunks.push(event.data);
-                };
-                
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    // TODO: Upload audio and submit exercise
-                    console.log('Audio recorded:', audioBlob);
-                };
-                
-                mediaRecorder.start();
-                recordingModal.classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error('Error accessing microphone:', error);
-                alert('Error accessing microphone. Please check your permissions.');
-            });
-    }
-    
-    function stopRecording() {
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-            recordingModal.classList.add('hidden');
+    let t=0;
+    (function frame(){
+      ctx.clearRect(0,0,W,H);
+      pieces.forEach(p=>{ 
+        p.x += p.vx; 
+        p.y += p.vy; 
+        p.vy += p.gravity; // Add gravity
+        p.a += p.rotSpeed; 
+        
+        ctx.save(); 
+        ctx.translate(p.x, p.y); 
+        ctx.rotate(p.a); 
+        ctx.fillStyle = p.color; 
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 10;
+        
+        // Draw different shapes
+        if (p.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size/2, 0, Math.PI*2);
+          ctx.fill();
+        } else {
+          // Draw rectangles with rotation
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
         }
+        
+        ctx.restore();
+      });
+      
+      if(++t<120) requestAnimationFrame(frame); 
+      else c.classList.add('hidden');
+    })();
+  }
+
+  function toast(text, good){
+    if(!resultToast) return;
+    resultToast.textContent = text;
+    resultToast.classList.remove('hidden');
+    resultToast.className = 'px-2 py-1 rounded-lg border text-xs ' + (good ? 'border-emerald-300/20 bg-emerald-500/10 text-emerald-200' : 'border-rose-300/20 bg-rose-500/10 text-rose-200');
+    setTimeout(()=> resultToast.classList.add('hidden'), 1200);
+  }
+
+  function bindCardSubmit(card){
+    card.querySelectorAll('.submit-exercise').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = card.dataset.exerciseId;
+        const type = card.dataset.type;
+        let response = [];
+        if (type === 'select' || type === 'listen') {
+          card.querySelectorAll('input:checked').forEach(p=>response.push(parseInt(p.value)));
+        } else if (type === 'match') {
+          card.querySelectorAll('.drop').forEach((d)=>{ 
+            const dragged = d.querySelector('[data-value]'); 
+            response.push(dragged ? parseInt(dragged.dataset.value) : -1); 
+          });
+        } else if (type === 'rewrite') {
+          response.push(card.querySelector('textarea')?.value || '');
+        } else if (type === 'fourpics') {
+          response.push(card.querySelector('input[type="text"]')?.value.trim() || '');
+        } else if (type === 'speak') {
+          response.push(card.dataset.audioUrl || '');
+        }
+
+        const res = await fetch(`/exercise/${id}/submit/`,{ method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':getCSRF()}, body: JSON.stringify({response, duration: 0})});
+        const data = await res.json();
+
+        const box = card.querySelector('.feedback');
+        box.classList.remove('hidden');
+        box.className = 'feedback mt-4 p-3 rounded-xl ' + (data.is_correct ? 'bg-emerald-500/10 text-emerald-200 border border-emerald-300/20' : 'bg-rose-500/10 text-rose-200 border border-rose-300/20');
+        box.textContent = data.feedback || (data.is_correct ? 'Nice! +10 XP' : 'Close! Try a different angle.');
+
+        if (data.success && data.is_correct && !card.dataset.done) {
+          card.dataset.done = '1';
+          card.classList.add('ring-1','ring-emerald-400/30','bg-emerald-500/5');
+          toast('Correct! +XP', true); boom();
+          setTimeout(()=>{
+            const ctaBar = $('#ctaBar');
+            const ctaBtn = $('#ctaButton');
+            const ctaText = $('#ctaText');
+            if (current < total-1) {
+              ctaText.textContent = 'Great job! Ready for the next task?';
+              ctaBtn.textContent = 'Next Task';
+              ctaBar.classList.remove('hidden');
+              ctaBtn.onclick = () => {
+                ctaBar.classList.add('hidden');
+                current += 1; showCard(current); bindCardSubmit(cards[current]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              };
+            } else {
+              progressBar.style.width = '100%';
+              ctaText.textContent = 'Lesson complete! 🎉';
+              ctaBtn.textContent = 'Complete Lesson';
+              ctaBar.classList.remove('hidden');
+              ctaBtn.onclick = () => {
+                ctaBar.classList.add('hidden');
+                boom(); setTimeout(()=>{ window.location.href = '{% url "home" %}'; }, 700);
+              };
+              // Also reveal the page footer
+              const footer = $('#lessonFooter'); footer?.classList.remove('hidden');
+            }
+          }, 500);
+        } else if (!data.is_correct) {
+          toast('Try again', false);
+          card.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:180});
+        }
+      });
+    });
+  }
+
+  bindCardSubmit(cards[current]);
+
+  // Drag & drop
+  let dragging = null;
+  $$('.drag').forEach(d => { 
+    d.addEventListener('dragstart', () => { 
+      dragging = d; 
+      d.classList.add('opacity-70'); 
+    }); 
+    d.addEventListener('dragend', () => { 
+      dragging = null; 
+      d.classList.remove('opacity-70'); 
+    }); 
+  });
+  $$('.drop').forEach(zone => { 
+    zone.addEventListener('dragover', e => { 
+      e.preventDefault(); 
+      zone.classList.add('border-violet-400/50', 'bg-violet-500/10'); 
+    }); 
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('border-violet-400/50', 'bg-violet-500/10');
+    }); 
+    zone.addEventListener('drop', (e) => { 
+      e.preventDefault();
+      zone.classList.remove('border-violet-400/50', 'bg-violet-500/10'); 
+      if (dragging) { 
+        // Clear existing content
+        zone.innerHTML = '';
+        // Clone the dragged item
+        const clone = dragging.cloneNode(true);
+        clone.classList.remove('opacity-70');
+        zone.appendChild(clone);
+        // Update the drop zone text color
+        zone.classList.remove('text-white/60');
+        zone.classList.add('text-white/90');
+      } 
+    }); 
+  });
+
+  // Text-to-speech for listen exercises
+  $$('[id^="tts_"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.exercise-card');
+      const prompt = card.querySelector('p.text-white\\/80')?.textContent || '';
+      if ('speechSynthesis' in window && prompt) {
+        const utterance = new SpeechSynthesisUtterance(prompt);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+        btn.textContent = '⏹ Stop';
+        utterance.onend = () => {
+          btn.textContent = '🎤 Read Aloud';
+        };
+      }
+    });
+  });
+
+  // Speak (record)
+  $$('.exercise-card .record').forEach(btn => {
+    let mediaRecorder, chunks=[]; const card = btn.closest('.exercise-card'); const status = card.querySelector('.rec-status');
+    btn.addEventListener('click', async () => {
+      try { const stream = await navigator.mediaDevices.getUserMedia({audio:true}); mediaRecorder = new MediaRecorder(stream); chunks=[]; status?.classList.remove('hidden'); mediaRecorder.ondataavailable = e => chunks.push(e.data); mediaRecorder.onstop = () => { const blob = new Blob(chunks,{type:'audio/webm'}); card.dataset.audioUrl = URL.createObjectURL(blob); status?.classList.add('hidden'); }; mediaRecorder.start(); setTimeout(()=> mediaRecorder.stop(), 3000); } catch(err){ alert('Mic permission needed.'); }
+    });
+  });
+
+  // Gate the Complete button - check lesson completion and unlock next level
+  $('#completeLesson')?.addEventListener('click', async ()=>{ 
+    if (current < total-1) { 
+      toast('Finish the tasks first', false); 
+      return; 
+    } 
+    
+    // Check if all exercises are completed
+    const completed = $$('.exercise-card[data-done="1"]').length;
+    if (completed < total) {
+      toast('Complete all tasks first', false);
+      return;
     }
     
-    function cancelRecording() {
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-        }
-        recordingModal.classList.add('hidden');
+    boom(); 
+    
+    // Mark lesson as complete and unlock next level
+    try {
+      const response = await fetch(`/lesson/{{ lesson.id }}/complete/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCSRF()}
+      });
+      const data = await response.json();
+      
+      if (data.success && data.next_level_unlocked) {
+        toast(`🎉 Level ${data.next_level} unlocked!`, 'xp');
+        setTimeout(()=>{ window.location.href = '{% url "home" %}'; }, 2000);
+      } else {
+        setTimeout(()=>{ window.location.href = '{% url "home" %}'; }, 700);
+      }
+    } catch(err) {
+      console.error('Error completing lesson:', err);
+      setTimeout(()=>{ window.location.href = '{% url "home" %}'; }, 700);
     }
-});
+  });
+})();
 </script>
 {% endblock %}

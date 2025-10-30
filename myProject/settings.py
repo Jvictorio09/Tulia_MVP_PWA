@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -212,8 +217,8 @@ AWS_STORAGE_BUCKET_NAME = 'your_bucket_name_here'
 AWS_S3_REGION_NAME = 'us-east-1'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
-# OpenAI settings (for speech scoring)
-OPENAI_API_KEY = 'your_openai_api_key_here'
+# OpenAI settings (for speech scoring and AI chat)
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
 
 # Logging
 LOGGING = {

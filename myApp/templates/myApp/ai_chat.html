@@ -1,0 +1,153 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Taylor AI Tutor - Tulia{% endblock %}
+
+{% block content %}
+<div class="flex flex-col min-h-screen bg-gradient-to-b from-[#0B0E14] via-[#0B0E14] to-[#111623] text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-[#0B0E14]/95 backdrop-blur border-b border-white/10">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-cyan-400 grid place-items-center shadow-md shadow-cyan-400/20">
+          <span class="text-lg font-semibold">T</span>
+        </div>
+        <div>
+          <h1 class="font-semibold text-base sm:text-lg">Taylor – Your AI Tutor</h1>
+          <p class="text-xs text-white/60">Level {{ current_level }} • {{ profile.total_xp }} XP</p>
+        </div>
+      </div>
+      <a href="{% url 'home' %}" class="text-white/60 hover:text-white text-lg sm:text-xl">✕</a>
+    </div>
+  </header>
+
+  <!-- Chat Container -->
+  <main id="chatContainer" class="flex-1 overflow-y-auto px-4 sm:px-6 max-w-4xl mx-auto w-full pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+var(--tabbar-h,64px))] space-y-4">
+    <!-- Welcome -->
+    <div class="p-4 rounded-2xl bg-gradient-to-r from-fuchsia-500/10 via-cyan-500/10 to-blue-400/10 border border-white/10 shadow-md">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center text-lg">💬</div>
+        <div>
+          <h2 class="font-semibold text-lg mb-1">Hi! I’m Taylor 👋</h2>
+          <p class="text-white/80 text-sm">Ask me anything about your lessons, delivery, or communication skills!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages" class="space-y-4"></div>
+  </main>
+
+  <!-- Input Area -->
+  <footer class="fixed left-0 right-0 z-50 bg-[#0B0E14]/95 backdrop-blur border-t border-white/10" style="bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-h,64px));">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-end gap-2 sm:gap-3">
+      <div class="flex-1 relative">
+        <textarea 
+          id="messageInput"
+          rows="1"
+          placeholder="Type your question for Taylor..."
+          class="w-full px-4 py-3 pr-12 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 resize-none transition-all text-sm sm:text-base"
+          onkeydown="if(event.key === 'Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"
+        ></textarea>
+        <button onclick="sendMessage()" class="absolute right-3 bottom-3 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-400 hover:scale-110 transition-transform grid place-items-center shadow-lg shadow-fuchsia-500/20">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const message = input.value.trim();
+  if (!message) return;
+
+  addMessage('user', message);
+  input.value = '';
+  input.style.height = 'auto';
+
+  const typingId = addMessage('bot', '...', true);
+
+  fetch('/ai-chat/send/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCSRF()
+    },
+    body: JSON.stringify({ message })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById(typingId)?.remove();
+    if (data.success) addMessage('bot', data.response);
+    else addMessage('bot', 'Sorry, I encountered an error. Please try again.', false, true);
+  })
+  .catch(() => {
+    document.getElementById(typingId)?.remove();
+    addMessage('bot', 'Could not connect. Please check your internet connection.', false, true);
+  });
+}
+
+function addMessage(sender, text, isTyping = false, isError = false) {
+  const messagesDiv = document.getElementById('messages');
+  const msgId = 'msg-' + Date.now();
+
+  const msgDiv = document.createElement('div');
+  msgDiv.id = msgId;
+  msgDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} gap-3`;
+
+  if (sender === 'user') {
+    msgDiv.innerHTML = `
+      <div class="max-w-[80%] px-4 py-3 rounded-2xl rounded-tr-none bg-gradient-to-r from-fuchsia-500 to-cyan-400 shadow">
+        <p class="text-white text-sm sm:text-base leading-relaxed">${escapeHtml(text)}</p>
+      </div>`;
+  } else {
+    const bg = isError ? 'bg-rose-500/10 border border-rose-500/30' : 'bg-white/5 border border-white/10';
+    msgDiv.innerHTML = `
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center text-white text-sm flex-shrink-0">T</div>
+      <div class="max-w-[80%] px-4 py-3 rounded-2xl rounded-tl-none ${bg}">
+        <p class="text-white/90 text-sm sm:text-base leading-relaxed">${isTyping ? '<span class="animate-pulse">Typing...</span>' : escapeHtml(text)}</p>
+      </div>`;
+  }
+
+  messagesDiv.appendChild(msgDiv);
+  msgDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  return msgId;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function getCSRF() {
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : '';
+}
+
+document.getElementById('messageInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+
+// Make sure the composer never hides under the keyboard on mobile
+const input = document.getElementById('messageInput');
+const container = document.getElementById('chatContainer');
+
+function snapToComposer() {
+  // Use new dvh-aware scroll on modern browsers
+  requestAnimationFrame(() => input.scrollIntoView({ block: 'end', behavior: 'smooth' }));
+}
+
+input.addEventListener('focus', snapToComposer);
+
+// If using iOS, re-snap after keyboard anim (~300ms)
+input.addEventListener('focus', () => setTimeout(snapToComposer, 350));
+</script>
+
+{% endblock %}
