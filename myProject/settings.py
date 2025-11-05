@@ -30,18 +30,26 @@ SECRET_KEY = 'django-insecure-your-secret-key-here'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tuliamvppwa-production.up.railway.app']
-
-
+# Get Railway domain from environment or use defaults
+RAILWAY_PUBLIC_DOMAIN = os.getenv('RAILWAY_PUBLIC_DOMAIN', '')
 ALLOWED_HOSTS = [
     'tuliamvppwa-production.up.railway.app',
     'localhost',
     '127.0.0.1',
+    '.railway.app',  # Allow all Railway subdomains
 ]
+
+# Add Railway public domain if set
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
 
 CSRF_TRUSTED_ORIGINS = [
     'https://tuliamvppwa-production.up.railway.app',
 ]
+
+# Add Railway public domain if set
+if RAILWAY_PUBLIC_DOMAIN:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_PUBLIC_DOMAIN}')
 
 
 # Application definition
@@ -176,7 +184,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise configuration for serving static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use CompressedStaticFilesStorage if Manifest fails (faster, less strict)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Celery Configuration (disabled for simplicity)
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
