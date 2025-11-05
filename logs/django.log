@@ -1616,3 +1616,6 @@ Not Found: /.well-known/appspecific/com.chrome.devtools.json
 "GET /ai-chat/ HTTP/1.1" 200 31306
 "GET /levels/ HTTP/1.1" 200 37195
 "GET /lesson/33/ HTTP/1.1" 200 30658
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 30425
