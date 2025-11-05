@@ -1,0 +1,24 @@
+# Railway ignore file - these files/folders won't be deployed
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.git/
+.vscode/
+.idea/
+*.log
+db.sqlite3
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
