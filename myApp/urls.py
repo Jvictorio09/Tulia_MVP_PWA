@@ -26,7 +26,20 @@ urlpatterns = [
     # Lesson completion
     path('lesson/<int:lesson_id>/complete/', views.complete_lesson, name='complete_lesson'),
     
+    # Onboarding
+    path('onboarding/', views.onboarding, name='onboarding'),
+    
     # AI Chat
     path('ai-chat/', views.ai_chat, name='ai_chat'),
     path('ai-chat/send/', views.send_ai_message, name='send_ai_message'),
+    
+    # n8n/RAG Webhooks
+    path('ai/lesson/orchestrate/', views.ai_lesson_orchestrate, name='ai_lesson_orchestrate'),
+    path('ai/coach/respond/', views.ai_coach_respond, name='ai_coach_respond'),
+    path('ai/milestone/score/', views.ai_milestone_score, name='ai_milestone_score'),
+    path('ai/eligibility/check/', views.ai_eligibility_check, name='ai_eligibility_check'),
+    
+    # District & Venues
+    path('district/<int:level_id>/', views.district_detail, name='district_detail'),
+    path('district/venue/<int:district_id>/', views.district_venue, name='district_venue'),
 ]

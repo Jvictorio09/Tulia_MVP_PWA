@@ -21,9 +21,20 @@ class Profile(models.Model):
     longest_streak = models.IntegerField(default=0)
     last_activity = models.DateTimeField(null=True, blank=True)
     
-    # Rewards
+    # Rewards (simplified: XP + Coins + Tickets only)
     coins = models.IntegerField(default=0)
-    gems = models.IntegerField(default=0)
+    tickets = models.IntegerField(default=0)  # For district venue entry
+    
+    # Personalization (from onboarding)
+    persona = models.JSONField(default=dict, blank=True)  # Role, audience, goal, etc.
+    contexts = models.JSONField(default=list, blank=True)  # Typical speaking contexts
+    goals = models.JSONField(default=list, blank=True)  # Learning goals
+    
+    # A/B testing
+    ab_variant = models.CharField(max_length=1, default='A', choices=[('A', 'Dashboard-first'), ('B', 'Map-first')])
+    
+    # Onboarding status
+    onboarding_completed = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.user.username} - Level {self.current_level}"
@@ -46,6 +57,13 @@ class Level(models.Model):
     xp_required = models.IntegerField()  # XP needed to unlock
     milestone_duration_seconds = models.IntegerField()  # Milestone recording time
     
+    # Unlock rule (e.g., "must_pass_milestone", "complete_modules_a_d")
+    unlock_rule = models.CharField(
+        max_length=50,
+        default="complete_previous_level",
+        help_text="Rule for unlocking this level (e.g., 'must_pass_milestone', 'complete_modules_a_d')"
+    )
+    
     # Speakopoly district
     district_name = models.CharField(max_length=100)
     district_description = models.TextField()
@@ -53,7 +71,7 @@ class Level(models.Model):
     
     # Rewards for completing level
     coins_reward = models.IntegerField(default=0)
-    gems_reward = models.IntegerField(default=0)
+    tickets_reward = models.IntegerField(default=0)  # Replaces gems_reward
     
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -132,6 +150,9 @@ class Exercise(models.Model):
     
     # For milestone exercises
     rubric_criteria = models.JSONField(default=dict, blank=True)  # Scoring criteria
+    
+    # Knowledge Block references (which Knowledge Blocks were used to generate this exercise)
+    concept_refs = models.JSONField(default=list, blank=True, help_text="List of KnowledgeBlock slugs used")
     
     # Scoring
     xp_reward = models.IntegerField(default=5)
@@ -234,7 +255,7 @@ class TipSheet(models.Model):
 
 
 class District(models.Model):
-    """Speakopoly districts/venues"""
+    """Speakopoly districts/venues (2D elegant map)"""
     level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='districts')
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -244,6 +265,9 @@ class District(models.Model):
     
     # Unlock requirements
     xp_required = models.IntegerField()
+    
+    # Ticket cost per venue (for entry into venues within this district)
+    ticket_cost_per_venue = models.IntegerField(default=1, help_text="Tickets required to enter each venue in this district")
     
     def __str__(self):
         return f"{self.level.name} - {self.name}"
@@ -298,26 +322,23 @@ class Streak(models.Model):
 
 
 class Quest(models.Model):
-    """Daily and weekly quests"""
+    """Daily quests only (simplified)"""
     QUEST_TYPES = [
         ('daily', 'Daily Quest'),
-        ('weekly', 'Weekly Quest'),
-        ('special', 'Special Quest'),
     ]
     
     name = models.CharField(max_length=100)
     description = models.TextField()
-    quest_type = models.CharField(max_length=10, choices=QUEST_TYPES)
+    quest_type = models.CharField(max_length=10, choices=QUEST_TYPES, default='daily')
     
     # Requirements
     xp_required = models.IntegerField(null=True, blank=True)
     lessons_required = models.IntegerField(null=True, blank=True)
     streak_required = models.IntegerField(null=True, blank=True)
     
-    # Rewards
+    # Rewards (simplified: no gems)
     xp_reward = models.IntegerField(default=0)
     coins_reward = models.IntegerField(default=0)
-    gems_reward = models.IntegerField(default=0)
     
     # Timing
     is_active = models.BooleanField(default=True)
@@ -423,3 +444,38 @@ class ContentBlock(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class KnowledgeBlock(models.Model):
+    """
+    Knowledge Blocks seeded from Level-1 Modules A-D (Foundations, Audience, Style, Clarity)
+    Used by n8n/RAG to generate lesson content dynamically
+    """
+    slug = models.SlugField(unique=True, max_length=200, help_text="Unique identifier (e.g., 'signal-sentence', '3x3-message-builder')")
+    summary = models.TextField(help_text="Brief summary of the concept (≤120 words)")
+    tags = models.JSONField(default=list, blank=True, help_text="Tags for categorization and retrieval")
+    exercise_seeds = models.JSONField(default=list, blank=True, help_text="Example exercise prompts/templates")
+    citations = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Source citations (e.g., [{'module': 'Module A - Foundations', 'section': 'Signal Sentence'}])"
+    )
+    
+    # Module reference (A, B, C, D)
+    module = models.CharField(
+        max_length=1,
+        choices=[('A', 'Module A - Foundations'), ('B', 'Module B - Audience'), ('C', 'Module C - Style'), ('D', 'Module D - Clarity')],
+        help_text="Which Level-1 module this knowledge block belongs to"
+    )
+    
+    # Content authority
+    content = models.TextField(help_text="Full content/explanation of the concept")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['module', 'slug']
+    
+    def __str__(self):
+        return f"{self.get_module_display()} - {self.slug}"

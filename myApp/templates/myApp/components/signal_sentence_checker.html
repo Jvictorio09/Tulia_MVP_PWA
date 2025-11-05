@@ -1,0 +1,74 @@
+{% comment %}
+Signal Sentence Checker Helper Component
+Validates: topic + tension + takeaway
+{% endcomment %}
+<div class="signal-checker bg-white/5 border border-white/10 rounded-xl p-4">
+  <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+    <span>📡</span>
+    Signal Sentence Checker
+  </h3>
+  <div class="space-y-3">
+    <div>
+      <label class="text-xs text-white/60 mb-1 block">Topic</label>
+      <input type="text" id="signal-topic" placeholder="What are you talking about?" 
+             class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+    </div>
+    <div>
+      <label class="text-xs text-white/60 mb-1 block">Tension</label>
+      <input type="text" id="signal-tension" placeholder="Why does it matter now?" 
+             class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+    </div>
+    <div>
+      <label class="text-xs text-white/60 mb-1 block">Takeaway</label>
+      <input type="text" id="signal-takeaway" placeholder="What should they remember?" 
+             class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+    </div>
+    <button onclick="checkSignalSentence()" class="w-full px-4 py-2 rounded-lg bg-violet-500/20 border border-violet-400/30 text-violet-300 text-sm font-semibold hover:bg-violet-500/30 transition-all duration-200">
+      Check Signal Sentence
+    </button>
+    <div id="signal-result" class="hidden text-xs mt-2"></div>
+  </div>
+</div>
+
+<script>
+function checkSignalSentence() {
+  const topic = document.getElementById('signal-topic').value.trim();
+  const tension = document.getElementById('signal-tension').value.trim();
+  const takeaway = document.getElementById('signal-takeaway').value.trim();
+  const result = document.getElementById('signal-result');
+  
+  let isValid = true;
+  let feedback = [];
+  
+  if (!topic) {
+    isValid = false;
+    feedback.push('❌ Topic is required');
+  } else {
+    feedback.push('✓ Topic: ' + topic);
+  }
+  
+  if (!tension) {
+    isValid = false;
+    feedback.push('❌ Tension is required');
+  } else {
+    feedback.push('✓ Tension: ' + tension);
+  }
+  
+  if (!takeaway) {
+    isValid = false;
+    feedback.push('❌ Takeaway is required');
+  } else {
+    feedback.push('✓ Takeaway: ' + takeaway);
+  }
+  
+  result.className = 'text-xs mt-2 ' + (isValid ? 'text-emerald-300' : 'text-rose-300');
+  result.innerHTML = feedback.join('<br>');
+  result.classList.remove('hidden');
+  
+  if (isValid) {
+    const signalSentence = `${topic} ${tension} ${takeaway}`;
+    result.innerHTML += '<br><br><strong>Your Signal Sentence:</strong><br>' + signalSentence;
+  }
+}
+</script>
+

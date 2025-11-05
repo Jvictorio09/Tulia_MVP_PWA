@@ -1,0 +1,54 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}{{ district.name }} - Tulia{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0B0E14] text-white" style="font-family: 'Inter', 'Manrope', sans-serif;">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{{ district.name }}</h1>
+      <p class="text-white/60">{{ district.description }}</p>
+      {% if district.coach_name %}
+      <div class="mt-4 p-4 bg-white/5 border border-white/10 rounded-xl">
+        <div class="text-sm font-semibold text-violet-300 mb-1">Coach {{ district.coach_name }}</div>
+        <p class="text-sm text-white/60">{{ district.coach_description }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Task Sheet (Guided Practice) -->
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-6">
+      <h2 class="text-2xl font-bold mb-4">Your Task</h2>
+      <div class="prose prose-invert max-w-none">
+        <p class="text-white/80 mb-4">
+          This venue offers targeted practice aligned with Level-1 concepts. Complete the guided task below.
+        </p>
+        
+        <!-- Example task content (would be AI-generated in production) -->
+        <div class="space-y-4">
+          <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+            <h3 class="font-semibold mb-2">Practice Task</h3>
+            <p class="text-sm text-white/70">
+              {% if 'Amphitheater' in district.name %}
+              Practice composure under pressure. Record a 30-second introduction while maintaining steady presence.
+              {% elif 'Forum' in district.name %}
+              Practice audience empathy. Craft a message that addresses your audience's motives, assumptions, and perceptions.
+              {% elif 'Market' in district.name %}
+              Practice presence in noise. Deliver a clear message despite distractions or interruptions.
+              {% else %}
+              Complete the guided practice task aligned with Level-1 outcomes.
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-sm text-white/40">
+      Tickets remaining: {{ tickets_remaining }}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

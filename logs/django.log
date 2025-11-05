@@ -1288,6 +1288,7 @@ Not Found: /favicon.ico
 "GET / HTTP/1.1" 200 25575
 Watching for file changes with StatReloader
 "GET / HTTP/1.1" 200 15725
+<<<<<<< Updated upstream
 Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 6083
 "GET / HTTP/1.1" 200 15725
@@ -1441,3 +1442,177 @@ Internal Server Error: /ai-chat/send/
 "GET /levels/ HTTP/1.1" 200 37452
 "GET /levels/ HTTP/1.1" 200 37132
 "GET /profile/ HTTP/1.1" 200 26929
+=======
+"GET /levels/ HTTP/1.1" 200 24504
+"GET /ai-chat/ HTTP/1.1" 302 0
+"GET /login/?next=/ai-chat/ HTTP/1.1" 200 12806
+"POST /login/?next=/ai-chat/ HTTP/1.1" 200 13032
+"POST /login/?next=/ai-chat/ HTTP/1.1" 200 13032
+"POST /login/?next=/ai-chat/ HTTP/1.1" 200 13032
+"GET /signup/ HTTP/1.1" 200 14479
+"POST /signup/ HTTP/1.1" 200 14697
+"POST /signup/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 23861
+"GET /levels/ HTTP/1.1" 200 25982
+"GET /lesson/33/ HTTP/1.1" 200 32225
+"GET /static/img/speakopoly_mascot.png HTTP/1.1" 404 2002
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+"POST /exercise/77/submit/ HTTP/1.1" 200 230
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 8098
+"GET / HTTP/1.1" 200 24295
+"GET /levels/ HTTP/1.1" 200 26416
+"GET /lesson/33/ HTTP/1.1" 302 0
+"GET /login/?next=/lesson/33/ HTTP/1.1" 200 12806
+Watching for file changes with StatReloader
+>>>>>>> Stashed changes
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 90110
+"GET /signup/ HTTP/1.1" 200 18797
+"GET /login/ HTTP/1.1" 200 16813
+"POST /login/ HTTP/1.1" 302 0
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 512, in __get__
+    rel_obj = self.related.get_cached_value(instance)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\fields\mixins.py", line 37, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'profile'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: myApp_profile.tickets
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\New Downloads\Tulia\myProject\myApp\views.py", line 105, in home
+    profile = request.user.profile
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\utils\functional.py", line 253, in inner
+    return func(_wrapped, *args)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    rel_obj = self.get_queryset(instance=instance).get(**filter_args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\query.py", line 645, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ADMIN\.conda\envs\myenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: myApp_profile.tickets
+"GET / HTTP/1.1" 500 163651
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 29910
+"GET /ai-chat/ HTTP/1.1" 200 30791
+"GET /levels/ HTTP/1.1" 200 36680
+"GET /lesson/33/ HTTP/1.1" 200 32347
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 29910
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 29910
+"GET /streak/ HTTP/1.1" 200 23904
+"GET /quests/ HTTP/1.1" 200 37866
+"GET /ai-chat/ HTTP/1.1" 200 30791
+Internal Server Error: /ai-chat/send/
+"POST /ai-chat/send/ HTTP/1.1" 500 77
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 29910
+"GET /profile/ HTTP/1.1" 200 26476
+"GET /leaderboard/ HTTP/1.1" 200 23196
+"GET /quests/ HTTP/1.1" 200 37866
+"GET /ai-chat/ HTTP/1.1" 200 30791
+"GET /levels/ HTTP/1.1" 200 36680
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 29910
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /onboarding/ HTTP/1.1" 200 29910
+E:\New Downloads\Tulia\myProject\myApp\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /levels/ HTTP/1.1" 200 36680
+"GET /lesson/33/ HTTP/1.1" 200 30536
+"POST /exercise/76/submit/ HTTP/1.1" 200 248
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10065
+"GET /levels/ HTTP/1.1" 200 37195
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 30425
+"GET /quests/ HTTP/1.1" 200 38381
+"GET /leaderboard/ HTTP/1.1" 200 23711
+"GET /profile/ HTTP/1.1" 200 28869
+Watching for file changes with StatReloader
+"GET /levels/ HTTP/1.1" 200 37195
+"GET /levels/ HTTP/1.1" 200 37195
+"GET /lesson/33/ HTTP/1.1" 200 30658
+"GET /quests/ HTTP/1.1" 200 38381
+"GET /levels/ HTTP/1.1" 200 37195
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 30425
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 90110
+"GET /login/ HTTP/1.1" 200 16813
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 30425
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10065
+"GET /levels/ HTTP/1.1" 200 37195
+"GET / HTTP/1.1" 302 0
+"GET /onboarding/ HTTP/1.1" 200 30425
+"GET /levels/ HTTP/1.1" 200 37195
+"GET /lesson/33/ HTTP/1.1" 200 30658
+"POST /exercise/76/submit/ HTTP/1.1" 200 258
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10065
+"GET /ai-chat/ HTTP/1.1" 200 31306
+"GET /levels/ HTTP/1.1" 200 37195
+"GET /lesson/33/ HTTP/1.1" 200 30658

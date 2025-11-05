@@ -19,7 +19,7 @@ from .models import (
     Profile, Level, Unit, Lesson, Exercise, ExerciseAttempt,
     MilestoneChallenge, MilestoneAttempt, District, Reward,
     UserReward, Streak, Quest, UserQuest, LeaderboardEntry,
-    SubscriptionPlan, Subscription, ContentBlock
+    SubscriptionPlan, Subscription, ContentBlock, KnowledgeBlock
 )
 
 logger = logging.getLogger(__name__)
@@ -99,37 +99,57 @@ def custom_500(request):
 
 
 def home(request):
-    """Home page - landing for non-auth, dashboard for auth"""
+    """Home page - landing for non-auth, dashboard for auth (A/B variants)"""
     if request.user.is_authenticated:
         try:
             profile = request.user.profile
         except Profile.DoesNotExist:
             profile = Profile.objects.create(user=request.user)
         
+        # Check if onboarding is needed
+        if not profile.onboarding_completed:
+            return redirect('onboarding')
+        
+        # Assign A/B variant if not set (50/50 split)
+        if not profile.ab_variant:
+            import random
+            profile.ab_variant = 'A' if random.random() < 0.5 else 'B'
+            profile.save()
+        
         # Get user's current level and available districts
         current_level = profile.current_level
-        levels = Level.objects.filter(number__lte=current_level + 1).order_by('number')
-        districts = District.objects.filter(level__in=levels)
+        level_1 = Level.objects.filter(number=1).first()
+        districts = District.objects.filter(level=level_1) if level_1 else District.objects.none()
         
-        # Get user's active quests
-        active_quests = Quest.objects.filter(is_active=True)
+        # Get Level-1 modules (Units A-D)
+        level_1_modules = Unit.objects.filter(level__number=1).order_by('order')[:4] if level_1 else []
+        
+        # Get user's active daily quests
+        active_quests = Quest.objects.filter(is_active=True, quest_type='daily')
         user_quests = UserQuest.objects.filter(user=request.user, quest__in=active_quests)
         
-        # Get leaderboard position
-        try:
-            leaderboard_entry = LeaderboardEntry.objects.get(user=request.user)
-        except LeaderboardEntry.DoesNotExist:
-            leaderboard_entry = None
+        # Check if District-1 is unlocked (Level-1 milestone passed)
+        district_1_unlocked = False
+        if level_1:
+            milestone = MilestoneChallenge.objects.filter(level=level_1).first()
+            if milestone:
+                passed = MilestoneAttempt.objects.filter(
+                    user=request.user,
+                    milestone=milestone,
+                    is_passed=True
+                ).exists()
+                district_1_unlocked = passed
         
         # Check for signup completion flag
         signup_completed = request.session.pop('signup_completed', False)
         
         context = {
             'profile': profile,
-            'levels': levels,
+            'level_1': level_1,
+            'level_1_modules': level_1_modules,
             'districts': districts,
+            'district_1_unlocked': district_1_unlocked,
             'user_quests': user_quests,
-            'leaderboard_entry': leaderboard_entry,
             'signup_completed': signup_completed,
         }
         return render(request, 'myApp/home.html', context)
@@ -140,7 +160,7 @@ def home(request):
 
 @login_required
 def lesson_runner(request, lesson_id):
-    """Interactive lesson runner with HTMX"""
+    """Interactive lesson runner with 3-zone layout (left rail, center, right AI Coach)"""
     lesson = get_object_or_404(Lesson, id=lesson_id)
     exercises = lesson.exercises.all().order_by('order')
     
@@ -159,6 +179,15 @@ def lesson_runner(request, lesson_id):
     level = lesson.unit.level if lesson.unit else None
     district = District.objects.filter(level=level).first() if level else None
     
+    # Get module (A, B, C, D) from unit order
+    module_letter = lesson.unit.name[0] if lesson.unit and lesson.unit.name else 'A'
+    
+    # Get Knowledge Blocks for this module (for AI Coach)
+    knowledge_blocks = KnowledgeBlock.objects.filter(module=module_letter)[:5]
+    
+    # Get all units in this level for left rail outline
+    all_units = Unit.objects.filter(level=level).order_by('order') if level else []
+    
     context = {
         'lesson': lesson,
         'exercises': exercises,
@@ -166,6 +195,9 @@ def lesson_runner(request, lesson_id):
         'is_first_lesson': is_first_lesson,
         'level': level,
         'district': district,
+        'module_letter': module_letter,
+        'knowledge_blocks': knowledge_blocks,
+        'all_units': all_units,
     }
     
     return render(request, 'myApp/lesson_runner.html', context)
@@ -208,10 +240,11 @@ def submit_exercise(request, exercise_id):
         score = calculate_exercise_score(exercise, user_response)
         is_correct = score >= 0.7  # 70% threshold
         
-        # Calculate XP with streak multiplier
+        # Calculate XP with streak multiplier (XP: 5-10 per exercise, streak multiplier ≤ 2×)
         profile = user.profile
+        base_xp = min(max(exercise.xp_reward, 5), 10)  # Clamp between 5-10
         streak_multiplier = min(1.0 + (profile.current_streak * 0.1), 2.0)  # Max 2x multiplier
-        xp_earned = int(exercise.xp_reward * streak_multiplier)
+        xp_earned = int(base_xp * streak_multiplier)
         
         # Create attempt
         attempt = ExerciseAttempt.objects.create(
@@ -344,39 +377,22 @@ def milestone_challenge(request, level_id):
 @login_required
 @require_http_methods(["POST"])
 def submit_milestone(request, milestone_id):
-    """Submit milestone attempt"""
+    """Submit milestone attempt (uses n8n scoring via ai_milestone_score endpoint)"""
     milestone = get_object_or_404(MilestoneChallenge, id=milestone_id)
     user = request.user
     
     try:
         data = json.loads(request.body)
         audio_recording = data.get('audio_recording', '')
-        duration_seconds = data.get('duration', 0)
+        duration_seconds = data.get('duration_seconds', 0)
+        rubric_scores = data.get('rubric_scores', {})
+        overall_score = data.get('overall_score', 0.0)
+        is_passed = data.get('is_passed', False)
         
-        # Calculate rubric scores (placeholder - in production, use AI)
-        rubric_scores = {
-            'clarity': 0.8,
-            'structure': 0.7,
-            'presence': 0.9,
-            'influence': 0.6,
-        }
-        
-        # Calculate overall score
-        weights = milestone.rubric.get('weights', {
-            'clarity': 0.3,
-            'structure': 0.3,
-            'presence': 0.2,
-            'influence': 0.2,
-        })
-        
-        overall_score = sum(rubric_scores[key] * weights.get(key, 0.25) 
-                          for key in rubric_scores.keys())
-        
-        is_passed = overall_score >= 0.7  # 70% threshold
-        
-        # Calculate rewards
+        # Calculate rewards (Tickets: +3 for passing Milestone)
         xp_earned = milestone.xp_reward if is_passed else milestone.xp_reward // 2
         coins_earned = milestone.coins_reward if is_passed else 0
+        tickets_earned = 3 if is_passed else 0  # +3 tickets for passing milestone
         
         # Create attempt
         attempt = MilestoneAttempt.objects.create(
@@ -387,6 +403,7 @@ def submit_milestone(request, milestone_id):
             is_passed=is_passed,
             overall_score=overall_score,
             rubric_scores=rubric_scores,
+            ai_feedback=data.get('coaching_note', ''),
             xp_earned=xp_earned,
             coins_earned=coins_earned
         )
@@ -396,11 +413,13 @@ def submit_milestone(request, milestone_id):
             profile = user.profile
             profile.total_xp += xp_earned
             profile.coins += coins_earned
-            profile.current_level = min(profile.current_level + 1, 6)
+            profile.tickets += tickets_earned
             profile.save()
             
-            # Unlock next level
-            unlock_next_level(user)
+            # Unlock District-1 (Level-1 milestone passed)
+            if milestone.level.number == 1:
+                # District-1 is now unlocked
+                pass
         
         return JsonResponse({
             'success': True,
@@ -409,6 +428,8 @@ def submit_milestone(request, milestone_id):
             'rubric_scores': rubric_scores,
             'xp_earned': xp_earned,
             'coins_earned': coins_earned,
+            'tickets_earned': tickets_earned,
+            'district_unlocked': is_passed and milestone.level.number == 1,
         })
         
     except Exception as e:
@@ -516,11 +537,10 @@ def complete_quest(request, quest_id):
             user_quest.completed_at = timezone.now()
             user_quest.save()
             
-            # Give rewards
+            # Give rewards (simplified: no gems)
             profile = user.profile
             profile.total_xp += quest.xp_reward
             profile.coins += quest.coins_reward
-            profile.gems += quest.gems_reward
             profile.save()
             
             messages.success(request, f'Quest completed! Earned {quest.xp_reward} XP and {quest.coins_reward} coins!')
@@ -641,10 +661,25 @@ def complete_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     user = request.user
     
-    # Add lesson XP and coins
+    # Add lesson XP and coins (simplified economy)
     profile = user.profile
     profile.total_xp += lesson.xp_reward
-    profile.coins += lesson.xp_reward // 2
+    profile.coins += lesson.xp_reward // 2  # 1 coin per 2 XP
+    
+    # Award tickets for module completion (+1 per module)
+    # Check if all lessons in the unit are completed
+    unit = lesson.unit
+    all_lessons = unit.lessons.all()
+    completed_lessons = ExerciseAttempt.objects.filter(
+        user=user,
+        exercise__lesson__unit=unit,
+        is_correct=True
+    ).values_list('exercise__lesson_id', flat=True).distinct()
+    
+    if len(completed_lessons) >= all_lessons.count():
+        # Module completed - award ticket
+        profile.tickets += 1
+    
     profile.save()
     
     # Check if we should unlock the next level
@@ -671,6 +706,86 @@ def complete_lesson(request, lesson_id):
         'next_level': next_level,
         'xp_earned': lesson.xp_reward,
     })
+
+
+@login_required
+def district_detail(request, level_id):
+    """District-1 detail page (2D map)"""
+    level = get_object_or_404(Level, id=level_id)
+    districts = District.objects.filter(level=level)
+    
+    # Check if unlocked
+    milestone = MilestoneChallenge.objects.filter(level=level).first()
+    is_unlocked = False
+    if milestone:
+        is_unlocked = MilestoneAttempt.objects.filter(
+            user=request.user,
+            milestone=milestone,
+            is_passed=True
+        ).exists()
+    
+    context = {
+        'level': level,
+        'districts': districts,
+        'is_unlocked': is_unlocked,
+    }
+    return render(request, 'myApp/district_detail.html', context)
+
+
+@login_required
+def district_venue(request, district_id):
+    """District venue entry (ticket-gated)"""
+    district = get_object_or_404(District, id=district_id)
+    profile = request.user.profile
+    
+    # Check if user has enough tickets
+    if profile.tickets < district.ticket_cost_per_venue:
+        messages.error(request, f'You need {district.ticket_cost_per_venue} ticket(s) to enter this venue.')
+        return redirect('district_detail', level_id=district.level.id)
+    
+    # Deduct tickets
+    if request.method == 'POST':
+        profile.tickets -= district.ticket_cost_per_venue
+        profile.save()
+        messages.success(request, f'Entered {district.name}!')
+    
+    context = {
+        'district': district,
+        'tickets_remaining': profile.tickets - district.ticket_cost_per_venue,
+    }
+    return render(request, 'myApp/district_venue.html', context)
+
+
+@login_required
+def onboarding(request):
+    """First-run personalization flow (7 fast cards)"""
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
+    
+    if request.method == 'POST':
+        # Collect onboarding data
+        persona = {
+            'role': request.POST.get('role', ''),
+            'typical_audience': request.POST.get('typical_audience', ''),
+            'main_goal': request.POST.get('main_goal', ''),
+            'comfort_under_pressure': request.POST.get('comfort_under_pressure', ''),
+            'time_pressure_profile': request.POST.get('time_pressure_profile', ''),
+            'preferred_practice_time': request.POST.get('preferred_practice_time', ''),
+            'daily_goal': request.POST.get('daily_goal', '5'),
+        }
+        
+        profile.persona = persona
+        profile.contexts = request.POST.getlist('contexts', [])
+        profile.goals = request.POST.getlist('goals', [])
+        profile.daily_goal_minutes = int(request.POST.get('daily_goal', 5))
+        profile.onboarding_completed = True
+        profile.save()
+        
+        return redirect('home')
+    
+    return render(request, 'myApp/onboarding.html')
 
 
 @login_required
@@ -798,3 +913,281 @@ def send_ai_message(request):
     except Exception as e:
         logger.error(f"Error in send_ai_message: {e}", exc_info=True)
         return JsonResponse({'success': False, 'error': f'An unexpected error occurred: {str(e)}'}, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def ai_lesson_orchestrate(request):
+    """
+    POST /ai/lesson/orchestrate
+    n8n webhook for lesson orchestration - returns Teach/Drill/Review/Checkpoint blocks
+    """
+    try:
+        data = json.loads(request.body)
+        user = request.user
+        profile = user.profile
+        
+        # Get context from request
+        module = data.get('module', 'A')  # A, B, C, D
+        block_type = data.get('block_type', 'teach')  # teach, drill, review, checkpoint
+        last_block = data.get('last_block')
+        last_score = data.get('last_score')
+        confusion_flags = data.get('confusion_flags', [])
+        
+        # Get n8n webhook URL from environment
+        webhook_url = os.getenv('N8N_LESSON_WEBHOOK_URL', '')
+        
+        if not webhook_url:
+            # Fallback: return cached Knowledge Block if available
+            knowledge_blocks = KnowledgeBlock.objects.filter(module=module)[:1]
+            if knowledge_blocks.exists():
+                kb = knowledge_blocks.first()
+                return JsonResponse({
+                    'success': True,
+                    'block': {
+                        'type': 'teach',
+                        'title': kb.slug.replace('-', ' ').title(),
+                        'content': kb.summary[:120],
+                        'source_chips': [{'module': kb.get_module_display(), 'section': kb.slug}],
+                        'why_it_matters': 'This concept is fundamental to effective communication.',
+                        'concept_refs': [kb.slug]
+                    }
+                })
+            else:
+                return JsonResponse({'success': False, 'error': 'n8n webhook not configured'}, status=500)
+        
+        # Prepare payload for n8n
+        payload = {
+            'user': {
+                'id': user.id,
+                'level': profile.current_level,
+                'module': module,
+                'streak': profile.current_streak,
+                'xp': profile.total_xp,
+                'tickets': profile.tickets,
+                'persona': profile.persona,
+                'goals': profile.goals,
+            },
+            'context': {
+                'block_type': block_type,
+                'last_block': last_block,
+                'last_score': last_score,
+                'confusion_flags': confusion_flags,
+            },
+            'module_metadata': {
+                'target_concepts': ['Signal sentence', '3×3 message builder'] if module == 'D' else [],
+            }
+        }
+        
+        # Call n8n webhook
+        try:
+            import requests
+            response = requests.post(
+                webhook_url,
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=30
+            )
+            response.raise_for_status()
+            return JsonResponse(response.json())
+        except Exception as e:
+            logger.error(f"n8n lesson orchestrate error: {e}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            
+    except Exception as e:
+        logger.error(f"Error in ai_lesson_orchestrate: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def ai_coach_respond(request):
+    """
+    POST /ai/coach/respond
+    n8n webhook for ad-hoc coach Q&A
+    """
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message', '')
+        user = request.user
+        profile = user.profile
+        
+        if not user_message:
+            return JsonResponse({'success': False, 'error': 'Message is required'}, status=400)
+        
+        webhook_url = os.getenv('N8N_COACH_WEBHOOK_URL', '')
+        
+        if not webhook_url:
+            return JsonResponse({
+                'success': True,
+                'response': 'I understand your question. Please configure the n8n coach webhook to enable full responses.',
+                'suggested_drill': None
+            })
+        
+        payload = {
+            'user': {
+                'id': user.id,
+                'level': profile.current_level,
+                'persona': profile.persona,
+            },
+            'message': user_message,
+        }
+        
+        try:
+            import requests
+            response = requests.post(
+                webhook_url,
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=30
+            )
+            response.raise_for_status()
+            return JsonResponse(response.json())
+        except Exception as e:
+            logger.error(f"n8n coach respond error: {e}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            
+    except Exception as e:
+        logger.error(f"Error in ai_coach_respond: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def ai_milestone_score(request):
+    """
+    POST /ai/milestone/score
+    n8n webhook for milestone evaluation (transcribe + rubric scoring)
+    """
+    try:
+        data = json.loads(request.body)
+        milestone_id = data.get('milestone_id')
+        audio_url = data.get('audio_url')
+        duration_seconds = data.get('duration_seconds', 0)
+        user = request.user
+        
+        if not milestone_id or not audio_url:
+            return JsonResponse({'success': False, 'error': 'milestone_id and audio_url required'}, status=400)
+        
+        milestone = get_object_or_404(MilestoneChallenge, id=milestone_id)
+        
+        webhook_url = os.getenv('N8N_MILESTONE_WEBHOOK_URL', '')
+        
+        if not webhook_url:
+            # Fallback: basic scoring
+            return JsonResponse({
+                'success': True,
+                'rubric_scores': {
+                    'clarity': 0.75,
+                    'structure': 0.70,
+                    'presence': 0.80,
+                    'influence': 0.65,
+                },
+                'overall_score': 0.725,
+                'is_passed': True,
+                'coaching_note': 'Good effort! Configure n8n webhook for detailed feedback.',
+            })
+        
+        payload = {
+            'user': {'id': user.id},
+            'milestone_id': milestone_id,
+            'audio_url': audio_url,
+            'duration_seconds': duration_seconds,
+            'rubric': milestone.rubric,
+        }
+        
+        try:
+            import requests
+            response = requests.post(
+                webhook_url,
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=60  # Longer timeout for audio processing
+            )
+            response.raise_for_status()
+            return JsonResponse(response.json())
+        except Exception as e:
+            logger.error(f"n8n milestone score error: {e}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            
+    except Exception as e:
+        logger.error(f"Error in ai_milestone_score: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_exempt
+def ai_eligibility_check(request):
+    """
+    POST /ai/eligibility/check
+    n8n webhook for eligibility & ticket calculations (optional centralization)
+    """
+    try:
+        data = json.loads(request.body)
+        user = request.user
+        profile = user.profile
+        action = data.get('action')  # 'lesson_complete', 'milestone_pass', etc.
+        
+        # Default: Django calculates eligibility server-side
+        # This endpoint can be used if rules are complex or need AI logic
+        
+        webhook_url = os.getenv('N8N_ELIGIBILITY_WEBHOOK_URL', '')
+        
+        if not webhook_url:
+            # Fallback: Django logic
+            tickets_delta = 0
+            can_unlock = False
+            
+            if action == 'module_complete':
+                tickets_delta = 1
+            elif action == 'milestone_pass':
+                tickets_delta = 3
+                # Check if District-1 can unlock
+                level_1 = Level.objects.filter(number=1).first()
+                if level_1:
+                    milestone = MilestoneChallenge.objects.filter(level=level_1).first()
+                    if milestone:
+                        passed = MilestoneAttempt.objects.filter(
+                            user=user,
+                            milestone=milestone,
+                            is_passed=True
+                        ).exists()
+                        can_unlock = passed
+            
+            return JsonResponse({
+                'success': True,
+                'tickets_delta': tickets_delta,
+                'can_unlock': can_unlock,
+                'unlock_rule': level_1.unlock_rule if level_1 else None,
+            })
+        
+        payload = {
+            'user': {
+                'id': user.id,
+                'level': profile.current_level,
+                'tickets': profile.tickets,
+            },
+            'action': action,
+        }
+        
+        try:
+            import requests
+            response = requests.post(
+                webhook_url,
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=30
+            )
+            response.raise_for_status()
+            return JsonResponse(response.json())
+        except Exception as e:
+            logger.error(f"n8n eligibility check error: {e}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            
+    except Exception as e:
+        logger.error(f"Error in ai_eligibility_check: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

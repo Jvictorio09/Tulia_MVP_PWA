@@ -3,14 +3,14 @@ from .models import (
     Profile, AuthProvider, Level, Unit, Lesson, Exercise, ExerciseAttempt,
     MilestoneChallenge, MilestoneAttempt, TipSheet, District, Reward,
     UserReward, Streak, Quest, UserQuest, LeaderboardEntry,
-    SubscriptionPlan, Subscription, ContentBlock
+    SubscriptionPlan, Subscription, ContentBlock, KnowledgeBlock
 )
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'current_level', 'total_xp', 'current_streak', 'coins', 'gems']
-    list_filter = ['current_level', 'learning_goal']
+    list_display = ['user', 'current_level', 'total_xp', 'current_streak', 'coins', 'tickets', 'ab_variant', 'onboarding_completed']
+    list_filter = ['current_level', 'learning_goal', 'ab_variant', 'onboarding_completed']
     search_fields = ['user__username', 'user__email']
 
 
@@ -137,3 +137,11 @@ class ContentBlockAdmin(admin.ModelAdmin):
     list_display = ['title', 'content_type', 'order', 'lesson', 'exercise']
     list_filter = ['content_type', 'lesson__unit__level']
     ordering = ['order']
+
+
+@admin.register(KnowledgeBlock)
+class KnowledgeBlockAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'module', 'summary', 'created_at']
+    list_filter = ['module', 'created_at']
+    search_fields = ['slug', 'summary', 'content']
+    ordering = ['module', 'slug']

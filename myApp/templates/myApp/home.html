@@ -1,293 +1,189 @@
 {% extends 'myApp/base.html' %}
+{% load static %}
 
-{% block title %}Speakopoly City - Master High-Stakes Communication{% endblock %}
+{% block title %}Home - Tulia{% endblock %}
 
 {% block content %}
-<div class="min-h-screen gradient-bg relative overflow-hidden">
-    <!-- Animated Background Elements -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div class="absolute top-40 left-1/2 w-60 h-60 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-    </div>
-    
-    <!-- Hero Section -->
-    <div class="relative z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="text-center">
-                <div class="animate-fade-in-up">
-                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                        Welcome to <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse">Speakopoly</span>
-                    </h1>
-                    <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto leading-relaxed">
-                        Master high-stakes communication through <span class="text-yellow-400 font-semibold">gamified micro-lessons</span>. 
-                        Build your speaking skills with streaks, quests, and city progression.
-                    </p>
-                </div>
-                
-                {% if user.is_authenticated %}
-                    <!-- Enhanced User Stats with Glass Effect -->
-                    <div class="animate-fade-in-up delay-200">
-                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-12 border border-white/20 shadow-2xl max-w-4xl mx-auto">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div class="text-center group">
-                                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <span class="text-2xl">⭐</span>
-                                    </div>
-                                    <div class="text-4xl font-bold text-yellow-400 mb-2">{{ profile.total_xp|default:0 }}</div>
-                                    <div class="text-white/80 font-medium">Total XP</div>
-                                </div>
-                                <div class="text-center group">
-                                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <span class="text-2xl">🪙</span>
-                                    </div>
-                                    <div class="text-4xl font-bold text-yellow-400 mb-2">{{ profile.coins|default:0 }}</div>
-                                    <div class="text-white/80 font-medium">Coins</div>
-                                </div>
-                                <div class="text-center group">
-                                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <span class="text-2xl">🔥</span>
-                                    </div>
-                                    <div class="text-4xl font-bold text-orange-300 mb-2">{{ profile.current_streak|default:0 }}</div>
-                                    <div class="text-white/80 font-medium">Day Streak</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <!-- Enhanced CTA Buttons -->
-                    <div class="animate-fade-in-up delay-300">
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="{% url 'signup' %}" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-8 py-4 rounded-2xl font-bold text-lg hover:from-yellow-300 hover:to-yellow-400 transform hover:scale-105 transition-all duration-300 shadow-xl">
-                                🚀 Start Learning
-                            </a>
-                            <a href="{% url 'login' %}" class="bg-white/20 backdrop-blur-lg text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/30 transform hover:scale-105 transition-all duration-300 border border-white/30">
-                                🔑 Login
-                            </a>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    
-    {% if user.is_authenticated %}
-    <!-- Enhanced Speakopoly City Map -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pb-24 md:pb-16">
-        <div class="text-center mb-16 animate-fade-in-up">
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">🏛️ Speakopoly City</h2>
-            <p class="text-xl text-white/80 max-w-3xl mx-auto">Explore districts and unlock new venues as you progress through your learning journey</p>
-        </div>
-        
-        <!-- Enhanced Districts Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for level in levels %}
-            <div class="group bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-                <div class="text-center">
-                    <!-- Enhanced Level Icon -->
-                    <div class="relative mb-6">
-                        <div class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                            <span class="text-3xl font-bold text-white">{{ level.number }}</span>
-                        </div>
-                        {% if level.number <= profile.current_level %}
-                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <span class="text-white text-sm">✓</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                    
-                    <h3 class="text-2xl font-bold text-white mb-3">{{ level.name }}</h3>
-                    <p class="text-white/80 text-sm mb-6 leading-relaxed">{{ level.description }}</p>
-                    
-                    <!-- Enhanced Progress Bar -->
-                    <div class="w-full bg-white/20 rounded-full h-3 mb-6 overflow-hidden">
-                        <div class="h-3 rounded-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-1000" 
-                             style="width: {% if level.number <= profile.current_level %}100%{% else %}0%{% endif %}"></div>
-                    </div>
-                    
-                    <!-- Enhanced District Info -->
-                    <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10">
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div class="text-center">
-                                <div class="text-white/60">District</div>
-                                <div class="text-white font-semibold">{{ level.district_name }}</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-white/60">Duration</div>
-                                <div class="text-white font-semibold">{{ level.duration_minutes }}m</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Enhanced Action Button -->
-                    {% if level.number <= profile.current_level %}
-                        <a href="{% url 'lesson_runner' level.units.first.lessons.first.id %}" 
-                           class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-green-400 hover:to-green-500 transform hover:scale-105 transition-all duration-300 shadow-lg">
-                            🚀 Enter District
-                        </a>
-                    {% elif level.number == profile.current_level|add:1 %}
-                        <button class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 py-3 px-6 rounded-2xl font-bold cursor-not-allowed">
-                            🔒 Unlock Soon
-                        </button>
-                    {% else %}
-                        <button class="w-full bg-gray-500 text-white py-3 px-6 rounded-2xl font-bold cursor-not-allowed">
-                            🔐 Locked
-                        </button>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Active Quests -->
-        {% if user_quests %}
-        <div class="mt-16 mb-8">
-            <h3 class="text-2xl font-bold text-white mb-6 text-center">Active Quests</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for user_quest in user_quests %}
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h4 class="text-lg font-semibold text-white">{{ user_quest.quest.name }}</h4>
-                        <span class="text-yellow-400">⭐</span>
-                    </div>
-                    <p class="text-white/80 text-sm mb-4">{{ user_quest.quest.description }}</p>
-                    
-                    <!-- Quest Progress -->
-                    <div class="w-full bg-white/20 rounded-full h-2 mb-4">
-                        <div class="bg-yellow-400 h-2 rounded-full" style="width: 60%"></div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between">
-                        <span class="text-white/70 text-sm">Progress: 60%</span>
-                        <span class="text-yellow-400 text-sm font-semibold">+{{ user_quest.quest.xp_reward }} XP</span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        
-        <!-- Quick Actions -->
-        <div class="mt-16 mb-24 md:mb-16 text-center">
-            <h3 class="text-2xl font-bold text-white mb-6">Quick Actions</h3>
-            <div class="flex flex-wrap justify-center gap-3">
-                <a href="{% url 'streak_page' %}" class="bg-orange-500 text-white px-5 py-2.5 rounded-lg hover:bg-orange-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
-                    <span>🔥</span>
-                    <span>View Streak</span>
-                </a>
-                <a href="{% url 'leaderboard' %}" class="bg-blue-500 text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
-                    <span>🏆</span>
-                    <span>Leaderboard</span>
-                </a>
-                <a href="{% url 'quests' %}" class="bg-green-500 text-white px-5 py-2.5 rounded-lg hover:bg-green-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
-                    <span>⚔️</span>
-                    <span>Quests</span>
-                </a>
-            </div>
-        </div>
-        
-        {% else %}
-        <!-- Features for non-authenticated users -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-white mb-8">Why Choose Speakopoly?</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-yellow-400 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🎯</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4">Micro-Lessons</h3>
-                    <p class="text-white/80">5-10 minute focused lessons that fit into your busy schedule</p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-green-400 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🏆</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4">Gamified Learning</h3>
-                    <p class="text-white/80">Streaks, quests, and city progression keep you motivated</p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-purple-400 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🎤</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-4">Real Practice</h3>
-                    <p class="text-white/80">Record yourself and get AI feedback on your speaking</p>
-                </div>
-            </div>
-        </div>
+<div class="min-h-screen bg-[#0B0E14] text-white" style="font-family: 'Inter', 'Manrope', sans-serif;">
+  <!-- Variant A: Dashboard-first -->
+  {% if profile.ab_variant == 'A' %}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Hero: Resume Lesson -->
+    {% if level_1_modules %}
+    <div class="mb-8">
+      <div class="bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-cyan-400/10 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+        <h2 class="text-2xl font-bold mb-4">Resume Lesson</h2>
+        <a href="{% url 'lesson_runner' level_1_modules.0.lessons.first.id %}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-xl font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all duration-200">
+          Continue Module {{ level_1_modules.0.name|first }} →
+        </a>
+      </div>
     </div>
     {% endif %}
+
+    <!-- Module Cards A-D -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {% for module in level_1_modules|slice:":4" %}
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/7.5 transition-all duration-200">
+        <div class="text-sm font-semibold text-violet-300 mb-2">Module {{ module.name|first }}</div>
+        <h3 class="text-lg font-bold mb-2">{{ module.name }}</h3>
+        <p class="text-sm text-white/60 mb-4">{{ module.description|truncatewords:15 }}</p>
+        <div class="text-xs text-white/40 mb-2">2 outcomes</div>
+        {% if module.lessons.first %}
+        <a href="{% url 'lesson_runner' module.lessons.first.id %}" class="text-sm font-semibold text-violet-400 hover:text-violet-300">
+          Start →
+        </a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Daily Quest -->
+    {% if user_quests %}
+    <div class="mb-8">
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+        <div>
+          <div class="text-sm font-semibold text-white/80 mb-1">Daily Quest</div>
+          <div class="text-xs text-white/60">{{ user_quests.0.quest.description }}</div>
+        </div>
+        <div class="text-xs px-3 py-1 rounded-full bg-violet-500/20 text-violet-300">Active</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- District-1 Teaser (Locked) -->
+    {% if level_1 and districts %}
+    <div class="mb-8">
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-6 {% if not district_1_unlocked %}opacity-60{% endif %}">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold">District 1: {{ level_1.district_name }}</h3>
+          {% if district_1_unlocked %}
+          <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Unlocked</span>
+          {% else %}
+          <span class="text-xs px-3 py-1 rounded-full bg-white/10 text-white/60">Locked</span>
+          {% endif %}
+        </div>
+        <p class="text-sm text-white/60 mb-4">{{ level_1.district_description|truncatewords:20 }}</p>
+        {% if district_1_unlocked %}
+        <a href="{% url 'district_detail' level_1.id %}" class="text-sm font-semibold text-violet-400 hover:text-violet-300">
+          Explore District →
+        </a>
+        {% else %}
+        <div class="text-xs text-white/40">Complete Level-1 milestone to unlock</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Variant B: Map-first -->
+  {% else %}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Hero: 2D District-1 City Tile -->
+    {% if level_1 and districts %}
+    <div class="mb-8">
+      <div class="bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-cyan-400/10 border border-white/10 rounded-2xl p-8 backdrop-blur-sm {% if not district_1_unlocked %}opacity-60{% endif %}">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-3xl font-bold mb-2">District 1: {{ level_1.district_name }}</h2>
+            <p class="text-white/60">{{ level_1.district_description }}</p>
+          </div>
+          {% if district_1_unlocked %}
+          <span class="text-sm px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">Unlocked</span>
+          {% else %}
+          <span class="text-sm px-4 py-2 rounded-full bg-white/10 text-white/60 font-semibold">Locked</span>
+          {% endif %}
+        </div>
+        
+        <!-- 3 Venues (Amphitheater, Forum, Market) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {% for district in districts|slice:":3" %}
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/7.5 transition-all duration-200">
+            <div class="text-lg mb-2">
+              {% if 'Amphitheater' in district.name %}🏛️
+              {% elif 'Forum' in district.name %}🏛️
+              {% elif 'Market' in district.name %}🏪
+              {% else %}📍{% endif %}
+            </div>
+            <h4 class="font-semibold mb-2">{{ district.name }}</h4>
+            <p class="text-xs text-white/60 mb-3">{{ district.description|truncatewords:10 }}</p>
+            {% if district_1_unlocked %}
+            <div class="text-xs text-white/40 mb-2">Entry: {{ district.ticket_cost_per_venue }} ticket{{ district.ticket_cost_per_venue|pluralize }}</div>
+            <a href="{% url 'district_venue' district.id %}" class="text-xs font-semibold text-violet-400 hover:text-violet-300">
+              Enter →
+            </a>
+            {% else %}
+            <div class="text-xs text-white/40">Complete milestone to unlock</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Bottom Rail: Lesson Track (A-D chips) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#0B0E14]/95 backdrop-blur-xl border-t border-white/10 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-4">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-xs text-white/60 mr-2">Lesson Track:</span>
+          {% for module in level_1_modules|slice:":4" %}
+          <a href="{% url 'lesson_runner' module.lessons.first.id %}" class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-semibold transition-all duration-200">
+            {{ module.name|first }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="pb-20"></div>
+  </div>
+  {% endif %}
+
+  <!-- Stats Bar -->
+  <div class="fixed top-16 right-4 z-30 flex items-center gap-3">
+    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-2 flex items-center gap-2">
+      <span class="text-yellow-400">⭐</span>
+      <span class="text-sm font-semibold">{{ profile.total_xp|default:0 }}</span>
+    </div>
+    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-2 flex items-center gap-2">
+      <span class="text-amber-400">🪙</span>
+      <span class="text-sm font-semibold">{{ profile.coins|default:0 }}</span>
+    </div>
+    {% if profile.tickets > 0 %}
+    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-2 flex items-center gap-2">
+      <span class="text-violet-400">🎫</span>
+      <span class="text-sm font-semibold">{{ profile.tickets }}</span>
+    </div>
+    {% endif %}
+    {% if profile.current_streak > 0 %}
+    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-2 flex items-center gap-2">
+      <span class="text-orange-400">🔥</span>
+      <span class="text-sm font-semibold">{{ profile.current_streak }}</span>
+    </div>
+    {% endif %}
+  </div>
 </div>
 
-<!-- Custom CSS for Enhanced Animations -->
 <style>
-@keyframes fade-in-up {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
-    opacity: 0;
-}
-
-.delay-200 {
-    animation-delay: 0.2s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-.delay-400 {
-    animation-delay: 0.4s;
-}
-
-/* Hover effects for cards */
-.group:hover .group-hover\:scale-110 {
-    transform: scale(1.1);
-}
-
-/* Glass morphism effect */
-.backdrop-blur-lg {
+  /* Quiet luxury aesthetic */
+  body {
+    font-family: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Fast and gentle motion (200-250ms) */
+  * {
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Subtle glass effects */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+  }
+  
+  .backdrop-blur-xl {
     backdrop-filter: blur(16px);
-}
-
-/* Enhanced gradient background */
-.gradient-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-/* Smooth transitions for all interactive elements */
-* {
-    transition: all 0.3s ease;
-}
-
-/* Enhanced button hover effects */
-.hover\:scale-105:hover {
-    transform: scale(1.05);
-}
-
-/* Custom shadow effects */
-.shadow-2xl {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
+  }
 </style>
-
-{% if signup_completed %}
-<script>
-    // Track signup completion
-    window.tuliaTrack('signup_complete');
-</script>
-{% endif %}
 {% endblock %}

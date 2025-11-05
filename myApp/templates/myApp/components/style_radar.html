@@ -1,0 +1,58 @@
+{% comment %}
+Style Radar Helper Component
+Assertiveness × Responsiveness snapshot with one tip
+{% endcomment %}
+<div class="style-radar bg-white/5 border border-white/10 rounded-xl p-4">
+  <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+    <span>📊</span>
+    Style Radar
+  </h3>
+  <div class="space-y-4">
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div>
+        <label class="text-white/60 mb-1 block">Assertiveness</label>
+        <input type="range" id="style-assertiveness" min="0" max="100" value="50" 
+               class="w-full" oninput="updateStyleRadar()">
+        <div class="flex justify-between text-white/40">
+          <span>Low</span>
+          <span>High</span>
+        </div>
+      </div>
+      <div>
+        <label class="text-white/60 mb-1 block">Responsiveness</label>
+        <input type="range" id="style-responsiveness" min="0" max="100" value="50" 
+               class="w-full" oninput="updateStyleRadar()">
+        <div class="flex justify-between text-white/40">
+          <span>Low</span>
+          <span>High</span>
+        </div>
+      </div>
+    </div>
+    <div id="style-tip" class="p-3 bg-violet-500/10 border border-violet-400/20 rounded-lg text-xs text-violet-200">
+      Adjust the sliders to see style recommendations.
+    </div>
+  </div>
+</div>
+
+<script>
+function updateStyleRadar() {
+  const assertiveness = parseInt(document.getElementById('style-assertiveness').value);
+  const responsiveness = parseInt(document.getElementById('style-responsiveness').value);
+  const tip = document.getElementById('style-tip');
+  
+  let recommendation = '';
+  
+  if (assertiveness >= 70 && responsiveness >= 70) {
+    recommendation = '💡 <strong>Direct & Expressive:</strong> You balance strong opinions with emotional awareness. Great for motivating teams.';
+  } else if (assertiveness >= 70 && responsiveness < 70) {
+    recommendation = '💡 <strong>Direct & Reserved:</strong> You value efficiency and results. Consider adding more warmth to build connection.';
+  } else if (assertiveness < 70 && responsiveness >= 70) {
+    recommendation = '💡 <strong>Indirect & Expressive:</strong> You prioritize harmony and relationships. Try stating your position more clearly.';
+  } else {
+    recommendation = '💡 <strong>Indirect & Reserved:</strong> You prefer thoughtful, measured communication. Consider being more direct when urgency is needed.';
+  }
+  
+  tip.innerHTML = recommendation;
+}
+</script>
+

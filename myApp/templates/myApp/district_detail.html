@@ -1,0 +1,55 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}District 1 - {{ level.district_name }} - Tulia{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0B0E14] text-white" style="font-family: 'Inter', 'Manrope', sans-serif;">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{{ level.district_name }}</h1>
+      <p class="text-white/60">{{ level.district_description }}</p>
+    </div>
+
+    {% if is_unlocked %}
+    <!-- 3 Venues Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for district in districts|slice:":3" %}
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/7.5 transition-all duration-200">
+        <div class="text-4xl mb-4">
+          {% if 'Amphitheater' in district.name %}🏛️
+          {% elif 'Forum' in district.name %}🏛️
+          {% elif 'Market' in district.name %}🏪
+          {% else %}📍{% endif %}
+        </div>
+        <h3 class="text-xl font-bold mb-2">{{ district.name }}</h3>
+        <p class="text-sm text-white/60 mb-4">{{ district.description }}</p>
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-white/40">
+            Entry: {{ district.ticket_cost_per_venue }} ticket{{ district.ticket_cost_per_venue|pluralize }}
+          </div>
+          <form method="POST" action="{% url 'district_venue' district.id %}">
+            {% csrf_token %}
+            <button type="submit" class="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all duration-200 text-sm">
+              Enter
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <!-- Locked State -->
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
+      <div class="text-6xl mb-4">🔒</div>
+      <h2 class="text-2xl font-bold mb-4">District Locked</h2>
+      <p class="text-white/60 mb-6">Complete the Level-1 milestone to unlock this district.</p>
+      <a href="{% url 'milestone_challenge' level.id %}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-xl font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all duration-200">
+        Take Milestone →
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

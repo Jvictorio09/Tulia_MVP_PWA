@@ -1,0 +1,301 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Milestone Challenge - {{ level.name }} - Tulia{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0B0E14] text-white" style="font-family: 'Inter', 'Manrope', sans-serif;">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{{ milestone.name }}</h1>
+      <p class="text-white/60">{{ milestone.description }}</p>
+      <div class="mt-4 text-sm text-white/40">
+        Duration: {{ milestone.duration_seconds }} seconds
+      </div>
+    </div>
+
+    <!-- Recording Interface -->
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-6">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold mb-4">Record Your Response</h2>
+        <p class="text-white/60 mb-6">Speak clearly and confidently. You'll be evaluated on clarity, structure, presence, and influence.</p>
+      </div>
+
+      <div class="flex flex-col items-center gap-6">
+        <button id="recordButton" class="px-8 py-4 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 text-lg">
+          🎤 Start Recording
+        </button>
+        <div id="recordingStatus" class="hidden text-rose-300 font-semibold">Recording...</div>
+        <div id="audioPlayback" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- Rubric Bars (will be populated after scoring) -->
+    <div id="rubricResults" class="hidden bg-white/5 border border-white/10 rounded-2xl p-8 mb-6">
+      <h2 class="text-2xl font-bold mb-6">Your Results</h2>
+      
+      <div class="space-y-6">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold">Clarity</span>
+            <span id="clarityScore" class="text-sm font-semibold">--</span>
+          </div>
+          <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+            <div id="clarityBar" class="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold">Structure</span>
+            <span id="structureScore" class="text-sm font-semibold">--</span>
+          </div>
+          <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+            <div id="structureBar" class="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold">Presence</span>
+            <span id="presenceScore" class="text-sm font-semibold">--</span>
+          </div>
+          <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+            <div id="presenceBar" class="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold">Influence</span>
+            <span id="influenceScore" class="text-sm font-semibold">--</span>
+          </div>
+          <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+            <div id="influenceBar" class="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
+        <div class="text-sm font-semibold mb-2">Overall Score</div>
+        <div id="overallScore" class="text-3xl font-bold mb-2">--</div>
+        <div id="passStatus" class="text-sm"></div>
+        <div id="coachingNote" class="mt-4 text-sm text-white/60"></div>
+      </div>
+    </div>
+
+    <!-- Previous Attempts -->
+    {% if attempts %}
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+      <h3 class="text-xl font-bold mb-4">Previous Attempts</h3>
+      <div class="space-y-3">
+        {% for attempt in attempts|slice:":5" %}
+        <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+          <div>
+            <div class="text-sm font-semibold">
+              Attempt {{ forloop.counter }} - {{ attempt.created_at|date:"M d, Y" }}
+            </div>
+            <div class="text-xs text-white/60">
+              Score: {{ attempt.overall_score|floatformat:0 }}% 
+              {% if attempt.is_passed %}<span class="text-emerald-400">✓ Passed</span>{% else %}<span class="text-rose-400">✗ Not Passed</span>{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function() {
+  let mediaRecorder;
+  let audioChunks = [];
+  let audioBlob;
+  const recordButton = document.getElementById('recordButton');
+  const recordingStatus = document.getElementById('recordingStatus');
+  const audioPlayback = document.getElementById('audioPlayback');
+  const rubricResults = document.getElementById('rubricResults');
+
+  recordButton.addEventListener('click', async () => {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          
+          // Show playback
+          audioPlayback.innerHTML = `
+            <audio controls src="${audioUrl}" class="mb-4"></audio>
+            <button id="submitButton" class="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all duration-200">
+              Submit for Scoring
+            </button>
+          `;
+          audioPlayback.classList.remove('hidden');
+          
+          // Upload and score
+          document.getElementById('submitButton')?.addEventListener('click', () => submitRecording(audioBlob));
+          
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        recordButton.textContent = '⏹ Stop Recording';
+        recordingStatus.classList.remove('hidden');
+      } catch (err) {
+        alert('Microphone permission needed.');
+      }
+    } else {
+      mediaRecorder.stop();
+      recordButton.textContent = '🎤 Start Recording';
+      recordingStatus.classList.add('hidden');
+    }
+  });
+
+  async function submitRecording(audioBlob) {
+    // Upload audio (simplified - in production, upload to S3 or similar)
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'recording.webm');
+    
+    // For now, create a data URL (in production, upload to server first)
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const audioDataUrl = reader.result;
+      
+      // Call milestone scoring endpoint
+      const response = await fetch(`/ai/milestone/score/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+          milestone_id: {{ milestone.id }},
+          audio_url: audioDataUrl, // In production, use actual URL
+          duration_seconds: {{ milestone.duration_seconds }},
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        displayResults(data);
+      }
+    };
+    reader.readAsDataURL(audioBlob);
+  }
+
+  function displayResults(data) {
+    const scores = data.rubric_scores || {};
+    const overall = data.overall_score || 0;
+    const passed = data.is_passed || overall >= 0.7;
+
+    // Update bars
+    ['clarity', 'structure', 'presence', 'influence'].forEach(key => {
+      const score = (scores[key] || 0) * 100;
+      document.getElementById(`${key}Score`).textContent = `${score.toFixed(0)}%`;
+      document.getElementById(`${key}Bar`).style.width = `${score}%`;
+    });
+
+    document.getElementById('overallScore').textContent = `${(overall * 100).toFixed(0)}%`;
+    document.getElementById('passStatus').textContent = passed 
+      ? '✓ Passed (≥70%)' 
+      : '✗ Not Passed (Need ≥70%)';
+    document.getElementById('passStatus').className = passed 
+      ? 'text-sm text-emerald-400 font-semibold' 
+      : 'text-sm text-rose-400 font-semibold';
+    document.getElementById('coachingNote').textContent = data.coaching_note || '';
+
+    rubricResults.classList.remove('hidden');
+    
+    // If passed, show celebration and unlock District-1
+    if (passed) {
+      // Confetti celebration (subtle)
+      showConfetti();
+      
+      // Submit to Django to save attempt and unlock District-1
+      fetch(`/milestone/{{ milestone.id }}/submit/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+          audio_recording: 'placeholder', // In production, use actual URL
+          duration_seconds: {{ milestone.duration_seconds }},
+          rubric_scores: scores,
+          overall_score: overall,
+          is_passed: true,
+        }),
+      });
+    }
+  }
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  function showConfetti() {
+    // Subtle confetti (whisper, not firework)
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    document.body.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const colors = ['#8B5CF6', '#EC4899', '#06B6D4'];
+    const pieces = Array(50).fill(0).map(() => ({
+      x: Math.random() * canvas.width,
+      y: -10,
+      vx: -2 + Math.random() * 4,
+      vy: 2 + Math.random() * 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 4 + Math.random() * 4,
+    }));
+    
+    let frame = 0;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1;
+        
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      
+      frame++;
+      if (frame < 120) {
+        requestAnimationFrame(animate);
+      } else {
+        document.body.removeChild(canvas);
+      }
+    }
+    animate();
+  }
+})();
+</script>
+{% endblock %}
+

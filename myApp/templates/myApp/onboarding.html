@@ -1,0 +1,132 @@
+{% extends 'myApp/base.html' %}
+{% load static %}
+
+{% block title %}Personalize Your Learning - Tulia{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0B0E14] text-white">
+  <div class="max-w-2xl mx-auto px-4 py-12">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold mb-2" style="font-family: 'Inter', sans-serif;">Let's personalize your journey</h1>
+      <p class="text-white/60 text-sm">7 quick questions to tailor your experience</p>
+    </div>
+
+    <form method="POST" id="onboarding-form" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Card 1: Role / typical audience / main goal -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <label class="block mb-3">
+          <span class="text-sm font-semibold text-white/80 mb-2 block">What's your role?</span>
+          <input type="text" name="role" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-500/50" placeholder="e.g., Executive, Engineer, Student">
+        </label>
+        <label class="block mb-3">
+          <span class="text-sm font-semibold text-white/80 mb-2 block">Who's your typical audience?</span>
+          <input type="text" name="typical_audience" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-500/50" placeholder="e.g., Board members, Technical teams, Peers">
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-white/80 mb-2 block">What's your main goal?</span>
+          <input type="text" name="main_goal" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-500/50" placeholder="e.g., Present confidently, Influence decisions">
+        </label>
+      </div>
+
+      <!-- Card 2: Comfort under pressure -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <label class="block">
+          <span class="text-sm font-semibold text-white/80 mb-3 block">How comfortable are you speaking under pressure?</span>
+          <select name="comfort_under_pressure" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+            <option value="">Select...</option>
+            <option value="very_uncomfortable">Very uncomfortable</option>
+            <option value="somewhat_uncomfortable">Somewhat uncomfortable</option>
+            <option value="neutral">Neutral</option>
+            <option value="somewhat_comfortable">Somewhat comfortable</option>
+            <option value="very_comfortable">Very comfortable</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Card 3: Time pressure profile -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <label class="block">
+          <span class="text-sm font-semibold text-white/80 mb-3 block">How much time pressure do you typically face?</span>
+          <select name="time_pressure_profile" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+            <option value="">Select...</option>
+            <option value="low">Low - I usually have time to prepare</option>
+            <option value="medium">Medium - Sometimes rushed</option>
+            <option value="high">High - Often speaking on short notice</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Card 4: Preferred practice time -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <label class="block">
+          <span class="text-sm font-semibold text-white/80 mb-3 block">When do you prefer to practice?</span>
+          <select name="preferred_practice_time" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+            <option value="">Select...</option>
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="evening">Evening</option>
+            <option value="anytime">Anytime</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Card 5: Daily goal -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <label class="block">
+          <span class="text-sm font-semibold text-white/80 mb-3 block">Daily learning goal (minutes)</span>
+          <select name="daily_goal" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50">
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15">15 minutes</option>
+            <option value="20">20 minutes</option>
+            <option value="30">30 minutes</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Contexts (multi-select) -->
+      <div class="onboarding-card bg-white/5 border border-white/10 rounded-2xl p-6">
+        <span class="text-sm font-semibold text-white/80 mb-3 block">Where do you typically speak? (select all that apply)</span>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            <input type="checkbox" name="contexts" value="meetings" class="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-500 focus:ring-violet-500/50">
+            <span class="text-sm">Team meetings</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            <input type="checkbox" name="contexts" value="presentations" class="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-500 focus:ring-violet-500/50">
+            <span class="text-sm">Presentations</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            <input type="checkbox" name="contexts" value="interviews" class="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-500 focus:ring-violet-500/50">
+            <span class="text-sm">Interviews</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            <input type="checkbox" name="contexts" value="networking" class="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-500 focus:ring-violet-500/50">
+            <span class="text-sm">Networking events</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <div class="flex justify-end pt-4">
+        <button type="submit" class="px-8 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all duration-200 shadow-lg shadow-violet-500/20">
+          Start Learning →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .onboarding-card {
+    transition: all 200ms ease;
+  }
+  .onboarding-card:focus-within {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+</style>
+{% endblock %}
+
