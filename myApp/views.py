@@ -69,6 +69,8 @@ def signup_view(request):
                 learning_goal='converse_confidently'
             )
             login(request, user)
+            # Track signup completion via session flag for client-side tracking
+            request.session['signup_completed'] = True
             return redirect('home')
     
     return render(request, 'myApp/auth/signup.html')
@@ -97,7 +99,7 @@ def custom_500(request):
 
 
 def home(request):
-    """Home page with Speakopoly city map"""
+    """Home page - landing for non-auth, dashboard for auth"""
     if request.user.is_authenticated:
         try:
             profile = request.user.profile
@@ -119,17 +121,21 @@ def home(request):
         except LeaderboardEntry.DoesNotExist:
             leaderboard_entry = None
         
+        # Check for signup completion flag
+        signup_completed = request.session.pop('signup_completed', False)
+        
         context = {
             'profile': profile,
             'levels': levels,
             'districts': districts,
             'user_quests': user_quests,
             'leaderboard_entry': leaderboard_entry,
+            'signup_completed': signup_completed,
         }
+        return render(request, 'myApp/home.html', context)
     else:
-        context = {}
-    
-    return render(request, 'myApp/home.html', context)
+        # New landing page for non-authenticated users
+        return render(request, 'myApp/landing/index.html')
 
 
 @login_required
@@ -145,10 +151,21 @@ def lesson_runner(request, lesson_id):
         is_correct=True
     ).values_list('exercise_id', flat=True)
     
+    # Check if this is user's first lesson (track for analytics)
+    total_attempts = ExerciseAttempt.objects.filter(user=request.user).count()
+    is_first_lesson = total_attempts == 0
+    
+    # Get Speakopoly district and level info
+    level = lesson.unit.level if lesson.unit else None
+    district = District.objects.filter(level=level).first() if level else None
+    
     context = {
         'lesson': lesson,
         'exercises': exercises,
         'completed_exercises': completed_exercises,
+        'is_first_lesson': is_first_lesson,
+        'level': level,
+        'district': district,
     }
     
     return render(request, 'myApp/lesson_runner.html', context)
@@ -678,64 +695,106 @@ def ai_chat(request):
 @login_required
 @require_http_methods(["POST"])
 def send_ai_message(request):
-    """Send message to OpenAI API and get response"""
+    """Send message to AI webhook and get response"""
     try:
         data = json.loads(request.body)
         user_message = data.get('message', '')
         
         if not user_message:
-            return JsonResponse({'error': 'Message is required'}, status=400)
+            return JsonResponse({'success': False, 'error': 'Message is required'}, status=400)
         
-        # Get OpenAI API key from environment
-        from django.conf import settings
-        api_key = settings.OPENAI_API_KEY if hasattr(settings, 'OPENAI_API_KEY') else os.getenv('OPENAI_API_KEY')
-        if not api_key:
-            return JsonResponse({'error': 'OpenAI API key not configured. Add OPENAI_API_KEY to your .env file.'}, status=500)
-        
-        # Import OpenAI
+        # Import requests library
         try:
-            from openai import OpenAI
-            client = OpenAI(api_key=api_key)
+            import requests
         except ImportError:
-            return JsonResponse({'error': 'OpenAI library not installed. Run: pip install openai'}, status=500)
+            return JsonResponse({'success': False, 'error': 'requests library not installed. Run: pip install requests'}, status=500)
         
         # Get user context
         profile = request.user.profile
         current_level = profile.current_level
         
-        # Build context-aware prompt
-        system_prompt = f"""You are Arwin, a friendly AI tutor for Tulia (Speakopoly), a communication skills learning app. 
+        # Webhook URL - can be overridden via environment variable
+        webhook_url = os.getenv('AI_CHAT_WEBHOOK_URL', "https://speak-pro-app.fly.dev/webhook/9527da75-7725-439b-9bce-920dcac70acb")
         
-Current user level: {current_level}
-User's total XP: {profile.total_xp}
-User's current streak: {profile.current_streak} days
-
-Help students with:
-- Questions about high-stakes communication, clarity, storytelling, delivery, and influence
-- Explaining concepts from their current lessons
-- Providing hints and guidance for exercises
-- Encouragement and motivation
-
-Keep responses concise, friendly, and practical. Use emojis sparingly. If asked about something outside the curriculum, politely redirect to communication skills."""
+        # Prepare payload with user context
+        payload = {
+            "message": user_message,
+            "user_context": {
+                "level": current_level,
+                "total_xp": profile.total_xp,
+                "current_streak": profile.current_streak,
+                "username": request.user.username,
+            }
+        }
         
-        # Call OpenAI API
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message}
-            ],
-            temperature=0.7,
-            max_tokens=300,
-        )
-        
-        ai_response = response.choices[0].message.content
-        
-        return JsonResponse({
-            'success': True,
-            'response': ai_response,
-        })
+        # Call webhook
+        try:
+            response = requests.post(
+                webhook_url,
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=30  # 30 second timeout
+            )
+            response.raise_for_status()  # Raise exception for bad status codes
+            
+            # Parse response
+            try:
+                response_data = response.json()
+            except ValueError:
+                # If response is not JSON, try to get text
+                ai_response = response.text.strip()
+                if not ai_response:
+                    raise ValueError("Empty response from webhook")
+            else:
+                # Handle different response formats
+                if isinstance(response_data, dict):
+                    # Try common response field names in order of likelihood
+                    ai_response = (
+                        response_data.get('response') or 
+                        response_data.get('message') or 
+                        response_data.get('text') or 
+                        response_data.get('answer') or
+                        response_data.get('content') or
+                        response_data.get('output')
+                    )
+                    if not ai_response and 'choices' in response_data:
+                        # Handle OpenAI-style response format
+                        if isinstance(response_data['choices'], list) and len(response_data['choices']) > 0:
+                            choice = response_data['choices'][0]
+                            ai_response = choice.get('message', {}).get('content') or choice.get('text') or str(choice)
+                    # If still no response, try to get the first string value
+                    if not ai_response:
+                        for key, value in response_data.items():
+                            if isinstance(value, str) and value.strip():
+                                ai_response = value
+                                break
+                elif isinstance(response_data, str):
+                    ai_response = response_data
+                elif isinstance(response_data, list) and len(response_data) > 0:
+                    # Handle list responses
+                    ai_response = str(response_data[0])
+                else:
+                    ai_response = str(response_data)
+            
+            if not ai_response or not ai_response.strip():
+                logger.warning(f"Unexpected or empty webhook response: {response_data if 'response_data' in locals() else response.text}")
+                ai_response = "I received your message, but couldn't process the response. Please try again."
+            
+            return JsonResponse({
+                'success': True,
+                'response': ai_response,
+            })
+            
+        except requests.exceptions.Timeout:
+            logger.error("Webhook request timed out")
+            return JsonResponse({'success': False, 'error': 'Request timed out. Please try again.'}, status=504)
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Webhook HTTP error: {e.response.status_code} - {e.response.text}")
+            return JsonResponse({'success': False, 'error': f'AI service error (HTTP {e.response.status_code}). Please try again.'}, status=500)
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Webhook request error: {e}")
+            return JsonResponse({'success': False, 'error': f'Failed to connect to AI service. Please check your connection and try again.'}, status=500)
         
     except Exception as e:
-        logger.error(f"Error in send_ai_message: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
+        logger.error(f"Error in send_ai_message: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': f'An unexpected error occurred: {str(e)}'}, status=500)

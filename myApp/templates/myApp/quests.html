@@ -3,16 +3,16 @@
 {% block title %}Quests & Challenges - Speakopoly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-8 pb-48 md:pb-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Quests & Challenges</h1>
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Quests & Challenges</h1>
             <p class="text-gray-600">Complete quests to earn rewards and level up</p>
         </div>
 
         <!-- Active Quests -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {% for quest in active_quests %}
             <div class="bg-white rounded-lg shadow-sm border p-6">
                 <div class="flex items-center justify-between mb-4">
@@ -25,23 +25,48 @@
                 
                 <!-- Quest Progress -->
                 <div class="mb-4">
-                    <div class="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Progress</span>
-                        <span>0%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-yellow-400 h-2 rounded-full" style="width: 0%"></div>
-                    </div>
+                    {% for user_quest in user_quests %}
+                        {% if user_quest.quest.id == quest.id %}
+                            {% if user_quest.is_completed %}
+                                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                    <span>Progress</span>
+                                    <span class="text-green-600 font-semibold">100%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
+                                </div>
+                            {% else %}
+                                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                    <span>Progress</span>
+                                    <span>0%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% empty %}
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Progress</span>
+                            <span class="text-gray-400">Not Started</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gray-300 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    {% endfor %}
                 </div>
                 
                 <!-- Rewards -->
                 <div class="flex items-center justify-between">
-                    <div class="flex space-x-2">
+                    <div class="flex flex-wrap gap-2">
                         {% if quest.xp_reward > 0 %}
-                        <span class="text-yellow-600 text-sm">+{{ quest.xp_reward }} XP</span>
+                        <span class="text-yellow-600 text-sm font-semibold">+{{ quest.xp_reward }} XP</span>
                         {% endif %}
                         {% if quest.coins_reward > 0 %}
-                        <span class="text-yellow-500 text-sm">+{{ quest.coins_reward }} 🪙</span>
+                        <span class="text-yellow-500 text-sm font-semibold flex items-center gap-1">
+                            <span>🪙</span>
+                            <span>+{{ quest.coins_reward }} token</span>
+                        </span>
                         {% endif %}
                     </div>
                     {% for user_quest in user_quests %}
@@ -83,21 +108,32 @@
 
         <!-- User Quest Progress -->
         {% if user_quests %}
-        <div class="mt-12">
+        <div class="mt-8 mb-12">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Your Quest Progress</h2>
-            <div class="space-y-4">
+            <div class="space-y-4 pb-12">
                 {% for user_quest in user_quests %}
-                <div class="bg-white rounded-lg shadow-sm border p-6">
+                <div class="bg-white rounded-lg shadow-sm border p-6 {% if forloop.last %}mb-8{% endif %}">
                     <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">{{ user_quest.quest.name }}</h3>
-                            <p class="text-sm text-gray-600">{{ user_quest.quest.description }}</p>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900 mb-1">{{ user_quest.quest.name }}</h3>
+                            <p class="text-sm text-gray-600 mb-2">{{ user_quest.quest.description }}</p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                {% if user_quest.quest.xp_reward > 0 %}
+                                <span class="text-yellow-600 text-sm font-semibold">+{{ user_quest.quest.xp_reward }} XP</span>
+                                {% endif %}
+                                {% if user_quest.quest.coins_reward > 0 %}
+                                <span class="text-yellow-500 text-sm font-semibold flex items-center gap-1">
+                                    <span>🪙</span>
+                                    <span>+{{ user_quest.quest.coins_reward }} token</span>
+                                </span>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right ml-4">
                             {% if user_quest.is_completed %}
-                                <span class="text-green-600 font-semibold">✓ Completed</span>
+                                <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-lg text-sm font-semibold">✓ Completed</span>
                             {% else %}
-                                <span class="text-yellow-600 font-semibold">In Progress</span>
+                                <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-sm font-semibold">In Progress</span>
                             {% endif %}
                         </div>
                     </div>

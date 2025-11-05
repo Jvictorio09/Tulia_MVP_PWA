@@ -14,6 +14,13 @@
           <span class="text-lg font-black">S</span>
         </div>
         <div>
+          <div class="flex items-center gap-2 mb-1">
+            {% if level %}
+            <span class="px-2 py-0.5 rounded-md bg-purple-500/20 border border-purple-400/30 text-purple-300 text-xs font-semibold">
+              🏛️ Level {{ level.number }}: {{ level.district_name }}
+            </span>
+            {% endif %}
+          </div>
           <h1 class="text-lg font-semibold leading-4">{{ lesson.name }}</h1>
           <p class="text-xs text-white/60">{{ lesson.unit.name }} • {{ lesson.duration_minutes }} min</p>
         </div>
@@ -74,8 +81,19 @@
 
     <aside class="mb-6 p-4 rounded-2xl border border-white/10 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/10 to-cyan-400/10">
       <div class="flex items-center gap-3">
-        <img src="{% static 'img/speakopoly_mascot.png' %}" alt="Mascot" class="w-12 h-12 rounded-xl ring-1 ring-white/10">
-        <p class="text-white/80"><span class="font-semibold">Coach Jeannie:</span> Answer right to jump to the next task — no scrollathons.</p>
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-cyan-400 flex items-center justify-center ring-1 ring-white/10 shadow-lg">
+          <span class="text-2xl font-black text-white">S</span>
+        </div>
+        <div class="flex-1">
+          {% if district and district.coach_name %}
+          <p class="text-white/80"><span class="font-semibold">Coach {{ district.coach_name }}:</span> Answer right to jump to the next task — no scrollathons.</p>
+          {% else %}
+          <p class="text-white/80"><span class="font-semibold">Coach Jeannie:</span> Answer right to jump to the next task — no scrollathons.</p>
+          {% endif %}
+          {% if district %}
+          <p class="text-xs text-white/60 mt-1">📍 {{ district.name }} • {{ level.district_description }}</p>
+          {% endif %}
+        </div>
       </div>
     </aside>
 
@@ -514,5 +532,12 @@
     }
   });
 })();
+
+{% if is_first_lesson %}
+// Track first lesson started
+window.addEventListener('load', function() {
+    window.tuliaTrack('first_lesson_started');
+});
+{% endif %}
 </script>
 {% endblock %}

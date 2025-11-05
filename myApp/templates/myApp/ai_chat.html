@@ -1,36 +1,66 @@
 {% extends 'myApp/base.html' %}
 {% load static %}
 
-{% block title %}Taylor AI Tutor - Tulia{% endblock %}
+{% block title %}Taylor AI Tutor - SpeakPro{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Hide the base navbar on AI chat page */
+    nav#navbar {
+        display: none !important;
+    }
+    body {
+        background: #0B0E14 !important;
+    }
+    .h-20 {
+        display: none !important;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="flex flex-col min-h-screen bg-gradient-to-b from-[#0B0E14] via-[#0B0E14] to-[#111623] text-white">
 
-  <!-- Header -->
-  <header class="sticky top-0 z-40 bg-[#0B0E14]/95 backdrop-blur border-b border-white/10">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+  <!-- Premium Dark Header -->
+  <header class="sticky top-0 z-40 bg-[#0B0E14]/95 backdrop-blur-xl border-b border-white/10 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-cyan-400 grid place-items-center shadow-md shadow-cyan-400/20">
-          <span class="text-lg font-semibold">T</span>
-        </div>
-        <div>
-          <h1 class="font-semibold text-base sm:text-lg">Taylor – Your AI Tutor</h1>
-          <p class="text-xs text-white/60">Level {{ current_level }} • {{ profile.total_xp }} XP</p>
+        <a href="{% url 'home' %}" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-cyan-400 grid place-items-center shadow-lg shadow-cyan-400/30 group-hover:scale-110 transition-transform">
+            <span class="text-white font-black text-lg">S</span>
+          </div>
+          <span class="text-lg font-bold text-white hidden sm:block">SpeakPro</span>
+        </a>
+        <div class="h-6 w-px bg-white/20"></div>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-fuchsia-500/20 to-cyan-400/20 border border-fuchsia-500/30 grid place-items-center">
+            <span class="text-fuchsia-300 font-bold text-sm">T</span>
+          </div>
+          <div>
+            <h1 class="font-bold text-base sm:text-lg text-white">Taylor – Your AI Tutor</h1>
+            <p class="text-xs text-white/50">Level {{ current_level }} • {{ profile.total_xp }} XP</p>
+          </div>
         </div>
       </div>
-      <a href="{% url 'home' %}" class="text-white/60 hover:text-white text-lg sm:text-xl">✕</a>
+      <a href="{% url 'home' %}" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </a>
     </div>
   </header>
 
   <!-- Chat Container -->
-  <main id="chatContainer" class="flex-1 overflow-y-auto px-4 sm:px-6 max-w-4xl mx-auto w-full pt-4 pb-[calc(72px+env(safe-area-inset-bottom)+var(--tabbar-h,64px))] space-y-4">
+  <main id="chatContainer" class="flex-1 overflow-y-auto px-4 sm:px-6 max-w-4xl mx-auto w-full pt-4 pb-[calc(100px+env(safe-area-inset-bottom)+var(--tabbar-h,64px))] space-y-4">
     <!-- Welcome -->
-    <div class="p-4 rounded-2xl bg-gradient-to-r from-fuchsia-500/10 via-cyan-500/10 to-blue-400/10 border border-white/10 shadow-md">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center text-lg">💬</div>
-        <div>
-          <h2 class="font-semibold text-lg mb-1">Hi! I’m Taylor 👋</h2>
-          <p class="text-white/80 text-sm">Ask me anything about your lessons, delivery, or communication skills!</p>
+    <div class="p-5 rounded-2xl bg-gradient-to-br from-fuchsia-500/15 via-cyan-500/15 to-blue-400/15 border border-white/10 backdrop-blur-sm shadow-xl">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center shadow-lg shadow-fuchsia-500/30 flex-shrink-0">
+          <span class="text-white text-xl">💬</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="font-bold text-lg mb-2 text-white">Hi! I'm Taylor 👋</h2>
+          <p class="text-white/80 text-sm leading-relaxed">Ask me anything about your lessons, delivery, or communication skills! I'm here to help you master high-stakes communication.</p>
         </div>
       </div>
     </div>
@@ -40,19 +70,19 @@
   </main>
 
   <!-- Input Area -->
-  <footer class="fixed left-0 right-0 z-50 bg-[#0B0E14]/95 backdrop-blur border-t border-white/10" style="bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-h,64px));">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-end gap-2 sm:gap-3">
+  <footer class="fixed left-0 right-0 z-50 bg-[#0B0E14]/95 backdrop-blur-xl border-t border-white/10 shadow-2xl" style="bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-h,64px) + 16px); padding-bottom: 16px;">
+    <div class="max-w-4xl mx-auto px-4 pt-4 pb-3 flex items-end gap-2 sm:gap-3">
       <div class="flex-1 relative">
         <textarea 
           id="messageInput"
           rows="1"
           placeholder="Type your question for Taylor..."
-          class="w-full px-4 py-3 pr-12 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 resize-none transition-all text-sm sm:text-base"
+          class="w-full px-4 py-3.5 pr-14 rounded-2xl bg-white/10 border-2 border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 resize-none transition-all text-sm sm:text-base backdrop-blur-sm shadow-lg"
           onkeydown="if(event.key === 'Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"
         ></textarea>
-        <button onclick="sendMessage()" class="absolute right-3 bottom-3 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-400 hover:scale-110 transition-transform grid place-items-center shadow-lg shadow-fuchsia-500/20">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+        <button onclick="sendMessage()" class="absolute right-2.5 bottom-2.5 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-400 hover:scale-110 active:scale-95 transition-transform grid place-items-center shadow-lg shadow-fuchsia-500/40 hover:shadow-fuchsia-500/60">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
           </svg>
         </button>
       </div>
@@ -80,15 +110,26 @@ function sendMessage() {
     },
     body: JSON.stringify({ message })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
   .then(data => {
     document.getElementById(typingId)?.remove();
-    if (data.success) addMessage('bot', data.response);
-    else addMessage('bot', 'Sorry, I encountered an error. Please try again.', false, true);
+    if (data.success) {
+      addMessage('bot', data.response);
+    } else {
+      const errorMsg = data.error || 'Sorry, I encountered an error. Please try again.';
+      addMessage('bot', errorMsg, false, true);
+      console.error('AI Chat Error:', data);
+    }
   })
-  .catch(() => {
+  .catch(error => {
     document.getElementById(typingId)?.remove();
-    addMessage('bot', 'Could not connect. Please check your internet connection.', false, true);
+    console.error('AI Chat Request Error:', error);
+    addMessage('bot', 'Could not connect to AI service. Please check your internet connection and try again.', false, true);
   });
 }
 
@@ -102,15 +143,17 @@ function addMessage(sender, text, isTyping = false, isError = false) {
 
   if (sender === 'user') {
     msgDiv.innerHTML = `
-      <div class="max-w-[80%] px-4 py-3 rounded-2xl rounded-tr-none bg-gradient-to-r from-fuchsia-500 to-cyan-400 shadow">
-        <p class="text-white text-sm sm:text-base leading-relaxed">${escapeHtml(text)}</p>
+      <div class="max-w-[80%] px-4 py-3 rounded-2xl rounded-tr-none bg-gradient-to-r from-fuchsia-500 to-cyan-400 shadow-lg shadow-fuchsia-500/30">
+        <p class="text-white text-sm sm:text-base leading-relaxed font-medium">${escapeHtml(text)}</p>
       </div>`;
   } else {
-    const bg = isError ? 'bg-rose-500/10 border border-rose-500/30' : 'bg-white/5 border border-white/10';
+    const bg = isError 
+      ? 'bg-rose-500/20 border border-rose-500/50 shadow-lg shadow-rose-500/20' 
+      : 'bg-gradient-to-br from-white/10 via-white/5 to-white/5 border border-white/10 backdrop-blur-sm shadow-lg';
     msgDiv.innerHTML = `
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center text-white text-sm flex-shrink-0">T</div>
+      <div class="w-9 h-9 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 grid place-items-center text-white text-sm font-bold flex-shrink-0 shadow-lg shadow-fuchsia-500/30">T</div>
       <div class="max-w-[80%] px-4 py-3 rounded-2xl rounded-tl-none ${bg}">
-        <p class="text-white/90 text-sm sm:text-base leading-relaxed">${isTyping ? '<span class="animate-pulse">Typing...</span>' : escapeHtml(text)}</p>
+        <p class="text-white/90 text-sm sm:text-base leading-relaxed">${isTyping ? '<span class="animate-pulse flex items-center gap-2"><span class="inline-block w-2 h-2 bg-white/60 rounded-full"></span><span class="inline-block w-2 h-2 bg-white/40 rounded-full" style="animation-delay: 0.2s"></span><span class="inline-block w-2 h-2 bg-white/30 rounded-full" style="animation-delay: 0.4s"></span></span>' : escapeHtml(text)}</p>
       </div>`;
   }
 

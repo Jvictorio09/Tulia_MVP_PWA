@@ -1286,3 +1286,158 @@ Not Found: /favicon.ico
 Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 7987
 "GET / HTTP/1.1" 200 25575
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 15725
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 6083
+"GET / HTTP/1.1" 200 15725
+"GET / HTTP/1.1" 200 15725
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 29359
+"GET / HTTP/1.1" 200 29359
+"GET /signup/ HTTP/1.1" 200 14306
+"GET /login/ HTTP/1.1" 200 12322
+"POST /login/ HTTP/1.1" 200 12548
+"POST /login/ HTTP/1.1" 200 12548
+"POST /login/ HTTP/1.1" 200 12548
+"GET /signup/ HTTP/1.1" 200 14306
+"POST /signup/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 29318
+"GET / HTTP/1.1" 200 29225
+"GET / HTTP/1.1" 200 29225
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 29359
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6194
+"GET / HTTP/1.1" 200 59583
+"GET /signup/ HTTP/1.1" 200 15572
+"GET /login/ HTTP/1.1" 200 13588
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 30491
+"GET / HTTP/1.1" 200 30491
+"GET / HTTP/1.1" 200 30491
+"GET /logout/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 59583
+"GET / HTTP/1.1" 200 62304
+"GET / HTTP/1.1" 200 71307
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6194
+"GET / HTTP/1.1" 200 75897
+"GET / HTTP/1.1" 200 75897
+"GET / HTTP/1.1" 200 82132
+"GET / HTTP/1.1" 200 85272
+"GET / HTTP/1.1" 200 89576
+"GET /signup/ HTTP/1.1" 200 18287
+"GET / HTTP/1.1" 200 89576
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 89612
+"GET /login/ HTTP/1.1" 200 16315
+"POST /login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 34199
+"GET /quests/ HTTP/1.1" 200 40646
+"GET /leaderboard/ HTTP/1.1" 200 22920
+"GET /streak/ HTTP/1.1" 200 23626
+"GET / HTTP/1.1" 200 34199
+"GET /quests/ HTTP/1.1" 200 40646
+"POST /quests/4/start/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 38255
+"POST /quests/4/complete/ HTTP/1.1" 302 0
+"GET /quests/ HTTP/1.1" 200 37571
+"GET /quests/ HTTP/1.1" 200 39824
+"GET / HTTP/1.1" 200 35492
+"GET / HTTP/1.1" 200 35853
+"GET /streak/ HTTP/1.1" 200 23796
+"GET /quests/ HTTP/1.1" 200 39988
+"GET /quests/ HTTP/1.1" 200 37752
+"GET /quests/ HTTP/1.1" 200 37752
+"GET /quests/ HTTP/1.1" 200 37764
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 89612
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 6083
+"GET /login/ HTTP/1.1" 200 16315
+"GET /login/ HTTP/1.1" 200 25134
+"GET /login/ HTTP/1.1" 200 24698
+"GET / HTTP/1.1" 200 35859
+"GET /streak/ HTTP/1.1" 200 23802
+"GET /leaderboard/ HTTP/1.1" 200 23094
+"GET /quests/ HTTP/1.1" 200 37764
+"GET /ai-chat/ HTTP/1.1" 200 28401
+Internal Server Error: /ai-chat/send/
+"POST /ai-chat/send/ HTTP/1.1" 500 70
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/clemence/Downloads/Tulia_MVP_PWA/myApp/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /ai-chat/ HTTP/1.1" 200 30528
+"GET / HTTP/1.1" 200 35859
+"GET /ai-chat/ HTTP/1.1" 200 30528
+Internal Server Error: /ai-chat/send/
+"POST /ai-chat/send/ HTTP/1.1" 500 88
+"GET /ai-chat/ HTTP/1.1" 200 30745
+"GET /ai-chat/ HTTP/1.1" 200 30745
+Internal Server Error: /ai-chat/send/
+"POST /ai-chat/send/ HTTP/1.1" 500 88
+"GET /ai-chat/ HTTP/1.1" 200 30745
+"GET /levels/ HTTP/1.1" 200 36548
+"GET /quests/ HTTP/1.1" 200 37820
+"GET /leaderboard/ HTTP/1.1" 200 23150
+"GET /profile/ HTTP/1.1" 200 26351
+"GET /levels/ HTTP/1.1" 200 36548
+"GET /leaderboard/ HTTP/1.1" 200 23150
+"GET /profile/ HTTP/1.1" 200 26351
+"GET /quests/ HTTP/1.1" 200 37820
+"GET /quests/ HTTP/1.1" 200 37820
+"GET /levels/ HTTP/1.1" 200 36642
+"GET /profile/ HTTP/1.1" 200 26431
+"GET /levels/ HTTP/1.1" 200 36642
+"GET /levels/ HTTP/1.1" 200 36642
+"GET / HTTP/1.1" 200 35915
+"GET /levels/ HTTP/1.1" 200 36642
+"GET /leaderboard/ HTTP/1.1" 200 23150
+"GET /profile/ HTTP/1.1" 200 26431
+"GET /profile/ HTTP/1.1" 200 26440
+"GET /levels/ HTTP/1.1" 200 36643
+"GET / HTTP/1.1" 200 35915
+"GET /levels/ HTTP/1.1" 200 36643
+"GET /levels/ HTTP/1.1" 200 37093
+"GET /profile/ HTTP/1.1" 200 26890
+"GET /levels/ HTTP/1.1" 200 37093
+"GET /levels/ HTTP/1.1" 200 37093
+"GET /profile/ HTTP/1.1" 200 26890
+"GET /profile/ HTTP/1.1" 200 26890
+"GET / HTTP/1.1" 200 36332
+"GET /levels/ HTTP/1.1" 200 37093
+"GET /profile/ HTTP/1.1" 200 26890
+"GET /levels/ HTTP/1.1" 200 37093
+"GET /profile/ HTTP/1.1" 200 26890
+"GET /profile/ HTTP/1.1" 200 27260
+"GET /profile/ HTTP/1.1" 200 27260
+"GET /levels/ HTTP/1.1" 200 37452
+"GET /levels/ HTTP/1.1" 200 37132
+"GET /profile/ HTTP/1.1" 200 26929

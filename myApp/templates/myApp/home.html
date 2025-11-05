@@ -73,7 +73,7 @@
     
     {% if user.is_authenticated %}
     <!-- Enhanced Speakopoly City Map -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pb-24 md:pb-16">
         <div class="text-center mb-16 animate-fade-in-up">
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">🏛️ Speakopoly City</h2>
             <p class="text-xl text-white/80 max-w-3xl mx-auto">Explore districts and unlock new venues as you progress through your learning journey</p>
@@ -141,7 +141,7 @@
         
         <!-- Active Quests -->
         {% if user_quests %}
-        <div class="mt-16">
+        <div class="mt-16 mb-8">
             <h3 class="text-2xl font-bold text-white mb-6 text-center">Active Quests</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for user_quest in user_quests %}
@@ -168,18 +168,18 @@
         {% endif %}
         
         <!-- Quick Actions -->
-        <div class="mt-16 text-center">
-            <h3 class="text-2xl font-bold text-white mb-8">Quick Actions</h3>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="{% url 'streak_page' %}" class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2">
+        <div class="mt-16 mb-24 md:mb-16 text-center">
+            <h3 class="text-2xl font-bold text-white mb-6">Quick Actions</h3>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="{% url 'streak_page' %}" class="bg-orange-500 text-white px-5 py-2.5 rounded-lg hover:bg-orange-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
                     <span>🔥</span>
                     <span>View Streak</span>
                 </a>
-                <a href="{% url 'leaderboard' %}" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2">
+                <a href="{% url 'leaderboard' %}" class="bg-blue-500 text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
                     <span>🏆</span>
                     <span>Leaderboard</span>
                 </a>
-                <a href="{% url 'quests' %}" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2">
+                <a href="{% url 'quests' %}" class="bg-green-500 text-white px-5 py-2.5 rounded-lg hover:bg-green-600 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl hover:scale-105">
                     <span>⚔️</span>
                     <span>Quests</span>
                 </a>
@@ -283,4 +283,11 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 </style>
+
+{% if signup_completed %}
+<script>
+    // Track signup completion
+    window.tuliaTrack('signup_complete');
+</script>
+{% endif %}
 {% endblock %}

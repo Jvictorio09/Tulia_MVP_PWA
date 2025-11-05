@@ -3,7 +3,7 @@
 {% block title %}All Levels - Speakopoly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="bg-gray-50 py-8 pb-24 md:pb-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="text-center mb-12">
@@ -12,7 +12,7 @@
         </div>
 
         <!-- Levels Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
             {% for level in levels %}
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden {% if level.number <= user.profile.current_level %}border-2 border-green-200{% elif level.number == user.profile.current_level|add:1 %}border-2 border-yellow-200{% else %}border border-gray-200{% endif %}">
                 <!-- Level Header -->
@@ -71,5 +71,7 @@
             {% endfor %}
         </div>
     </div>
+    <!-- Extra spacing for mobile footer -->
+    <div class="h-4 md:h-0"></div>
 </div>
 {% endblock %}
